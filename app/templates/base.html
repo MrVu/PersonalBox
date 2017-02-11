@@ -1,0 +1,28 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <script src="/static/bootstrap/js/jquery-3.1.1.min.js"></script>
+    <script src="/static/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/static/bootstrap/js/script.js"></script>
+
+    <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/bootstrap/css/custom.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="/favicon.ico"/>
+    <title></title>
+</head>
+<body>
+{% if current_user.is_authenticated %}
+<div class="container">
+    <ul class="nav nav-tabs-primary">
+        <button role="presentation" class="btn btn-danger"><a class="white-link" href={{url_for('auth.logout')}}>LOG
+            OUT</a></button>
+    </ul>
+    <ol class="breadcrumb-primary"> </ol>
+</div>
+{% endif %}
+
+{% block content %}
+{% endblock %}
+</body>
+</html>
