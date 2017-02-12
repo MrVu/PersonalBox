@@ -2,7 +2,7 @@ import os
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 class Config:
-    SECRET_KEY = os.environ.get('SECRET') or 'Vu1781991'
+    SECRET_KEY = os.environ.get('SECRET') or 'Whatever123`'
 
     @staticmethod
     def init_app(app):
