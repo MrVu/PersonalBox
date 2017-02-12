@@ -1,4 +1,5 @@
-from flask import render_template, session, redirect, url_for, send_from_directory, request, jsonify
+from flask import render_template, session, redirect, url_for, send_from_directory, request,
+jsonify, abort
 from . import main
 from .. import db
 from app import functions
@@ -48,12 +49,8 @@ def browse(path):
     BASE_PATH = path
     form = NewFolder()
     upload_form = FileUpload()
-    # if upload_form.validate_on_submit():
-    # file_data = upload_form.upload_file.data
-    # CURRENT_PATH = os.path.join(functions.GetBasePath(key_folder), BASE_PATH)
-    # file_data.save(os.path.join(CURRENT_PATH, file_data.filename))
-    # return redirect(url_for('main.browse', path=path))
-    if request.method == 'POST' and 'files' in request.files:
+
+   if request.method == 'POST' and 'files' in request.files:
         file = request.files['files']
         CURRENT_PATH = os.path.join(functions.GetBasePath(key_folder), BASE_PATH)
         try:
@@ -83,8 +80,11 @@ def browse(path):
 @main.route('/download/<path:path>')
 @login_required
 def download(path):
-    key_folder = current_user.userkey
-    return send_from_directory(functions.GetBasePath(key_folder), path, as_attachment=True)
+    try:
+        key_folder = current_user.userkey
+        return send_from_directory(functions.GetBasePath(key_folder), path, as_attachment=True)
+    except:
+        abort(404)
 
 
 @main.route('/remove/<path:path>')
@@ -94,8 +94,11 @@ def remove(path):
     CURRENT_PATH = os.path.join(functions.GetBasePath(key_folder), path)
     PARENT = functions.parent(CURRENT_PATH, key_folder)
     PARENT_URL = functions.geturlpath(PARENT, key_folder)
-    if functions.IsFile(path, key_folder):
-        os.remove(CURRENT_PATH)
-    else:
-        shutil.rmtree(CURRENT_PATH)
-    return redirect(url_for('main.browse', path=PARENT_URL))
+    try:
+        if functions.IsFile(path, key_folder):
+            os.remove(CURRENT_PATH)
+        else:
+            shutil.rmtree(CURRENT_PATH)
+        return redirect(url_for('main.browse', path=PARENT_URL))
+    except:
+        abort(404)
