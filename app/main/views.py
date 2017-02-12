@@ -1,5 +1,4 @@
-from flask import render_template, session, redirect, url_for, send_from_directory, request,
-jsonify, abort
+from flask import render_template, session, redirect, url_for, send_from_directory, request, jsonify, abort
 from . import main
 from .. import db
 from app import functions
@@ -49,8 +48,7 @@ def browse(path):
     BASE_PATH = path
     form = NewFolder()
     upload_form = FileUpload()
-
-   if request.method == 'POST' and 'files' in request.files:
+    if request.method == 'POST' and 'files' in request.files:
         file = request.files['files']
         CURRENT_PATH = os.path.join(functions.GetBasePath(key_folder), BASE_PATH)
         try:
