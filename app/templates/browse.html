@@ -13,7 +13,7 @@
     {% endif %}
 
     {% if (folders|length > 0) or (files|length > 0) %}
-    <a href="javascript:history.back()">
+    <a href="/browse/{{ parent_url }}">
         <div class="panel panel-info">
             <div class="panel-heading">
                 <span class="glyphicon glyphicon glyphicon-arrow-left" style="margin-right:10px;"></span>
@@ -33,7 +33,7 @@
     <br>
 
     {% if (folders|length == 0) and (files|length == 0) and not Error404 %}
-    <a href="javascript:history.back()">
+    <a href="/browse/{{ parent_url }}">
         <div class="panel panel-warning">
             <div class="panel-heading">
                 <span class="glyphicon glyphicon glyphicon-arrow-left" style="margin-right:10px;"></span>

@@ -24,13 +24,13 @@ def root():
     upload_form = FileUpload()
 
     if request.method == 'POST' and 'files' in request.files:
-        file= request.files['files']
+        file = request.files['files']
         CURRENT_PATH = os.path.join(functions.GetBasePath(key_folder), BASE_PATH)
         try:
             file.save(os.path.join(CURRENT_PATH, file.filename))
-            response= {'status': 1}
+            response = {'status': 1}
         except:
-            response={'status': 0}
+            response = {'status': 0}
         return jsonify(response)
     elif form.validate_on_submit():
         new_folder = form.folder.data
@@ -38,7 +38,8 @@ def root():
         return redirect(url_for('main.root'))
 
     folders, files = functions.ReadPath("", key_folder)
-    return render_template('root.html', form=form, classmaker= classmaker, upload_form=upload_form, folders=folders, files=files,
+    return render_template('root.html', form=form, classmaker=classmaker, upload_form=upload_form, folders=folders,
+                           files=files,
                            BASE_PATH=BASE_PATH)
 
 
@@ -49,6 +50,9 @@ def browse(path):
     BASE_PATH = path
     form = NewFolder()
     upload_form = FileUpload()
+    CURRENT_PATH = os.path.join(functions.GetBasePath(key_folder), BASE_PATH)
+    parent_local_path= functions.parent(CURRENT_PATH, key_folder)
+    parent_url = functions.geturlpath(parent_local_path, key_folder)
     if request.method == 'POST' and 'files' in request.files:
         file = request.files['files']
         CURRENT_PATH = os.path.join(functions.GetBasePath(key_folder), BASE_PATH)
@@ -58,6 +62,7 @@ def browse(path):
         except:
             response = {'status': 0}
         return jsonify(response)
+
     elif form.validate_on_submit():
         new_folder = form.folder.data
         functions.MkNewDir(new_folder, path, key_folder)
@@ -72,8 +77,9 @@ def browse(path):
 
     else:
         folders, files = functions.ReadPath(path, key_folder)
-        return render_template('browse.html', upload_form=upload_form,classmaker= classmaker, form=form, folders=folders, files=files,
-                               BASE_PATH=BASE_PATH)
+        return render_template('browse.html', upload_form=upload_form, classmaker=classmaker, form=form,
+                               folders=folders, files=files,
+                               BASE_PATH=BASE_PATH, parent_url=parent_url)
 
 
 @main.route('/download/<path:path>')
