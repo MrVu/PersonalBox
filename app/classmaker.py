@@ -10,7 +10,7 @@ def classmaker(filename):
     elif extension == "mp4":
         file_class = "glyphicon glyphicon-film"
     elif extension == "mp3":
-        file_class = "glyphicon-music"
+        file_class = "glyphicon glyphicon-music"
     else:
         file_class= "glyphicon glyphicon-file"
     return file_class
