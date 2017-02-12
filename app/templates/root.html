@@ -40,7 +40,7 @@
     <div class="panel panel-primary">
         <div class="panel-body">
             <a href={{ url_for("main.browse", path=BASE_PATH+file)}}>
-            <span class="glyphicon glyphicon-play" style="margin-right:10px;"></span>
+            <span class="{{classmaker(file)}}" style="margin-right:10px;"></span>
             {{ file }}
             </a>
 
@@ -164,6 +164,7 @@ $(function() {
         });
     });
 });
+
 
 </script>
 {% endblock %}

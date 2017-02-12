@@ -5,7 +5,7 @@
 
     {% if route %}
     <ul class="breadcrumb">
-        <li><a href="{{ url_for(" root")}}">root</a>
+        <li><a href="{{ url_for("main.root")}}">root</a>
             {% for string in route %}
         <li><a>{{string}}</a></li>
         {% endfor %}
@@ -86,7 +86,7 @@
     <div class="panel panel-primary">
         <div class="panel-body">
             <a href={{ url_for("main.browse", path=BASE_PATH+"/"+file)}}>
-            <span class="glyphicon glyphicon-play" style="margin-right:10px;"></span>
+            <span class="{{classmaker(file)}}" style="margin-right:10px;"></span>
             {{file}}
             </a>
             <a href={{ url_for("main.download" , path=BASE_PATH+"/"+file)}}>
@@ -149,13 +149,16 @@
                     <h4 class="modal-title">Upload</h4>
                 </div>
                 <div class="modal-body">
-                    <form id="upload-form" method="POST" enctype="multipart/form-data" action="{{ url_for('main.browse', path= BASE_PATH) }}">
+                    <form id="upload-form" method="POST" enctype="multipart/form-data"
+                          action="{{ url_for('main.browse', path= BASE_PATH) }}">
                         <input id="fileupload" type="file" name="files">
                         <input id="upload-file-btn" type="submit">
                     </form>
 
                     <div class="progress">
-                        <div id="progress-bar" class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 0%">0%</div>
+                        <div id="progress-bar" class="progress-bar" role="progressbar" aria-valuenow="60"
+                             aria-valuemin="0" aria-valuemax="100" style="width: 0%">0%
+                        </div>
                     </div>
 
                 </div>
@@ -208,5 +211,6 @@ $(function() {
         });
     });
 });
+
 </script>
 {% endblock %}

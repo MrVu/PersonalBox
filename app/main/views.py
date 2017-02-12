@@ -5,6 +5,7 @@ from app import functions
 from .forms import NewFolder, FileUpload
 import os, shutil
 from flask_login import login_required, current_user
+from app.classmaker import classmaker
 
 
 @main.route('/', methods=['GET', 'POST'])
@@ -37,7 +38,7 @@ def root():
         return redirect(url_for('main.root'))
 
     folders, files = functions.ReadPath("", key_folder)
-    return render_template('root.html', form=form, upload_form=upload_form, folders=folders, files=files,
+    return render_template('root.html', form=form, classmaker= classmaker, upload_form=upload_form, folders=folders, files=files,
                            BASE_PATH=BASE_PATH)
 
 
@@ -71,7 +72,7 @@ def browse(path):
 
     else:
         folders, files = functions.ReadPath(path, key_folder)
-        return render_template('browse.html', upload_form=upload_form, form=form, folders=folders, files=files,
+        return render_template('browse.html', upload_form=upload_form,classmaker= classmaker, form=form, folders=folders, files=files,
                                BASE_PATH=BASE_PATH)
 
 
