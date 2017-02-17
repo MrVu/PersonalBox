@@ -5,43 +5,57 @@
     <script src="/static/bootstrap/js/bootstrap.min.js"></script>
     <script src="/static/bootstrap/js/script.js"></script>
 
-    <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.css">
     <link rel="stylesheet" href="/static/bootstrap/css/custom.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" href="/favicon.ico"/>
     <title></title>
 </head>
 <body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="header">
+            <div class="header-logo">
+                <a href="#"></a>
+                <img class="logo hidden-phone" src="{{ url_for('static', filename="images/logo.png") }}">
+                <img class="logo hidden-desktop" src="{{ url_for('static', filename="images/logo-phone.png") }}">
 
-<div class="header">
-    <div class="header-logo">
-        <a href="#"></a>
-        <img class="logo" src="{{ url_for('static', filename="images/logo.png") }}">
 
-        <div class="header-right"
-             {% if current_user.is_authenticated %}
-        <button role="presentation" class="btn btn-danger btn-sm"><a class="white-link" href={{url_for('auth.logout')}}>LOG
-            OUT</a></button>
-        {% if current_user.is_authenticated %}
-        {{ current_user.username }}
-        {% endif %}
-        {% endif %}
+                <!-- Dropdown menu -->
+                <div class="header-right">
+                    <div class="col-md-1">
+                        <div class="dropdown">
+                            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+                                {% if current_user.is_authenticated %}
+                                {{current_user.username}}
+                                {% endif %}
+                                <span class="caret"></span></button>
+                            <ul class="dropdown-menu">
+                                <li><a href={{url_for('auth.logout')}}>LOGOUT</a></li>
+                                <li><a href="#">User Detail</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!--end dropdown menu -->
+
+            </div>
+
+        </div>
     </div>
 
-</div>
-
-<div class="container">
-    <div class="row">
-        <div class="content-primary">
-            <div class="content-header">
-                FILE MANAGER
-            </div>
-            <div class="content">
-                {% block content %}
-                {% endblock %}
+    <div class="container">
+        <div class="row">
+            <div class="content-primary">
+                <div class="content-header">
+                    FILE MANAGER
+                </div>
+                <div class="content">
+                    {% block content %}
+                    {% endblock %}
+                </div>
             </div>
         </div>
     </div>
-</div>
 </body>
 </html>

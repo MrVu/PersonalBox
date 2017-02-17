@@ -1,6 +1,6 @@
 .download {
 float: right;
-padding-right: 50px;
+padding-right: 30px;
 }
 
 .white-link {
@@ -78,19 +78,18 @@ padding-top: 25px;
 .content {
     padding: 20px 25px 0 25px;
     border: 1px #363c42 solid;
-    margin: 30px -55px 0 0;
+    margin: 30px 0 0 0;
 }
 
 .content-header{
-    padding: 10px 0px 10px 10px;
+    padding: 10px 0px 10px 35px;
     background-color: #363c42;
-    margin: 0 -55px -30px 0px;
+    margin: 0 0 -30px 0px;
     color: white;
 }
 
 .content-primary{
     margin-top: 35px;
-    margin-right: 60px;
 }
 
 .btn-info {
@@ -104,4 +103,16 @@ padding-top: 25px;
     border-bottom: 1px solid transparent;
     border-top-left-radius: 3px;
     border-top-right-radius: 3px;
+}
+/* Phone */
+@media only screen and (max-width: 760px) {
+  .hidden-phone{
+   display: none;
+   }
+}
+
+@media only screen and (min-width: 760px) {
+    .hidden-desktop{
+        display: none;
+    }
 }
