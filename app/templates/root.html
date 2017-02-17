@@ -17,10 +17,14 @@
 
     <div class="panel panel-primary">
         <div class="panel-heading">
+            <div class="col-md-8">
             <a class="white-link" href={{ url_for("main.browse", path=folder)}}>
             <span class="glyphicon glyphicon-folder-open" style="margin-right:10px;"></span>
             {{folder}}
             </a>
+            </div>
+
+            <div class="col-md-4">
             <a class="white-link" href={{ url_for("main.remove" , path=BASE_PATH+folder)}}>
 
             <div class="download">
@@ -28,6 +32,7 @@
                 Remove
             </div>
             </a>
+            </div>
         </div>
     </div>
     {% endfor%}
@@ -38,11 +43,13 @@
     {% for file in files %}
     <div class="panel panel-primary">
         <div class="panel-body">
+            <div class="col-md-8">
             <a href={{ url_for("main.browse", path=BASE_PATH+file)}}>
             <span class="{{classmaker(file)}}" style="margin-right:10px;"></span>
             {{ file }}
             </a>
-
+            </div>
+            <div class="col-md-4">
             <a href={{ url_for("main.download" , path=BASE_PATH+file)}}>
 
             <div class="download">
@@ -57,6 +64,7 @@
                 Remove
             </div>
             </a>
+            </div>
         </div>
     </div>
     {% endfor %}
