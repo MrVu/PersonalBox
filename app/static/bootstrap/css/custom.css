@@ -55,3 +55,45 @@ input[type="password"] {
   background-image: linear-gradient(to right, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
 }
 
+body {
+  padding-top: 20px !important;
+  border: 1px;
+}
+
+.header {
+background: #363c42;
+height: 80px;
+margin-bottom: 20px;
+}
+
+.logo{
+padding-top: 10px;
+}
+
+.header-right {
+display: inline;
+float: right;
+padding-top: 25px;
+}
+.content {
+    padding: 20px 25px 0 25px;
+    border: 1px #363c42 solid;
+    margin: 30px -55px 0 0;
+}
+
+.content-header{
+    padding: 10px 0px 10px 10px;
+    background-color: #363c42;
+    margin: 0 -55px -30px 0px;
+    color: white;
+}
+
+.content-primary{
+    margin-top: 35px;
+}
+
+.btn-info {
+    color: #fff;
+    background-color: #337ab7 !important;
+    border-color: #337ab7 !important;
+}
