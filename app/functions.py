@@ -3,7 +3,6 @@ from models import User
 from flask_login import current_user
 
 
-
 def Installed(key_folder):
     LOCAL_PATH = os.path.dirname(os.path.realpath(__file__))
     REPO = os.path.join(LOCAL_PATH, key_folder)
@@ -20,13 +19,12 @@ def RandomID(size=15, chars=string.ascii_uppercase + string.digits):
     return ''.join(random.choice(chars) for _ in range(size))
 
 
-def ReadPath(path,key_folder):
+def ReadPath(path, key_folder):
     LOCAL_PATH = os.path.dirname(os.path.realpath(__file__))
     REPO = os.path.join(LOCAL_PATH, key_folder)
     REQUESTED_PATH = os.path.join(REPO, path)
 
     if not os.path.exists(REQUESTED_PATH):
-        print("Doesnt exist.")
         return None
 
     try:
@@ -35,11 +33,10 @@ def ReadPath(path,key_folder):
         files = stuff[2]
         return folders, files
     except StopIteration:
-        print("empty.")
         return 0
 
 
-def IsFile(path,key_folder):
+def IsFile(path, key_folder):
     LOCAL_PATH = os.path.dirname(os.path.realpath(__file__))
     REPO = os.path.join(LOCAL_PATH, key_folder)
     FINAL_PATH = os.path.join(REPO, path)
@@ -50,7 +47,7 @@ def IsFile(path,key_folder):
         return True
 
 
-def RepoPath(path,key_folder):
+def RepoPath(path, key_folder):
     LOCAL_PATH = os.path.dirname(os.path.realpath(__file__))
     REPO = os.path.join(LOCAL_PATH, key_folder)
     FINAL_PATH = os.path.join(REPO, path)
@@ -64,7 +61,7 @@ def GetBasePath(key_folder):
     return REPO
 
 
-def MkNewDir(name, path,key_folder):
+def MkNewDir(name, path, key_folder):
     LOCAL_PATH = os.path.dirname(os.path.realpath(__file__))
     REPO = os.path.join(LOCAL_PATH, key_folder)
     CURRENT_PATH = os.path.join(REPO, path)
@@ -75,7 +72,7 @@ def MkNewDir(name, path,key_folder):
         print "ERROR OS"
 
 
-def parent(path,key_folder):
+def parent(path, key_folder):
     LOCAL_PATH = os.path.dirname(os.path.realpath(__file__))
     REPO = os.path.join(LOCAL_PATH, key_folder)
     CURRENT_PATH = os.path.join(REPO, path)
@@ -83,7 +80,7 @@ def parent(path,key_folder):
     return PARENT
 
 
-def geturlpath(path,key_folder):
+def geturlpath(path, key_folder):
     LOCAL_PATH = os.path.dirname(os.path.realpath(__file__))
     REPO = os.path.join(LOCAL_PATH, key_folder)
     BASE_PATH = os.path.join(LOCAL_PATH, REPO)
