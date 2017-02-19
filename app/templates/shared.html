@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% if files|length > 0 %}
+{% for file in files %}
+<div class="panel panel-primary">
+    <div class="panel-body">
+        <div class="col-md-8">
+            <span class="{{classmaker(file)}}" style="margin-right:10px;"></span>
+            <a href="#" data-toggle="modal" data-target="#sharedModal">
+                <span class="glyphicon glyphicon-link"> {{file}}</span>
+            </a>
+        </div>
+
+        <div class="col-md-4">
+            <a href="#">
+
+            <div class="download">
+                <span class="glyphicon glyphicon-remove" style="margin-right:10px;"></span>
+                <a href="{{ url_for('share.remove_shared_file', path=file)}}">Remove</a>
+            </div>
+            </a>
+        </div>
+    </div>
+</div>
+<div id="sharedModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Shared Link</h4>
+      </div>
+      <div class="modal-body">
+        <p>http://somehost.com/shared/{{ key_folder }}/ {{ file }}</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endfor %}
+{% endif %}
+{% endblock %}

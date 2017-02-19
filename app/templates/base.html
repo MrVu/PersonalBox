@@ -17,8 +17,8 @@
         <div class="header">
             <div class="header-logo">
                 <a href="#"></a>
-                <img class="logo hidden-phone" src="{{ url_for('static', filename="images/logo.png") }}">
-                <img class="logo hidden-desktop" src="{{ url_for('static', filename="images/logo-phone.png") }}">
+                <img class="logo hidden-phone" src="{{ url_for('static', filename='images/logo.png') }}">
+                <img class="logo hidden-desktop" src="{{ url_for('static', filename='images/logo-phone.png') }}" style="padding-left: 20px">
 
 
                 <!-- Dropdown menu -->
@@ -48,7 +48,8 @@
         <div class="row">
             <div class="content-primary">
                 <div class="content-header">
-                    FILE MANAGER
+                    <a class="white-link" href="{{ url_for('main.root') }}">FILE MANAGER</a>
+                    <a class="white-link" href="{{ url_for('share.shared') }}">SHARING</a>
                 </div>
                 <div class="content">
                     {% block content %}

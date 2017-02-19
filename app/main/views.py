@@ -7,7 +7,6 @@ import os, shutil
 from flask_login import login_required, current_user
 from app.classmaker import classmaker
 
-
 @main.route('/', methods=['GET', 'POST'])
 @login_required
 def index():
@@ -91,6 +90,15 @@ def download(path):
     except:
         abort(404)
 
+@main.route('/send/<path:path>')
+@login_required
+def send_to_shared_folder(path):
+    key_folder= current_user.userkey
+    base_path= functions.GetBasePath(key_folder)
+    file_path= os.path.join(base_path,path)
+    des_path= functions.getUserSharedPath(key_folder)
+    shutil.copy(file_path, des_path)
+    return redirect(url_for('share.shared'))
 
 @main.route('/remove/<path:path>')
 @login_required
@@ -107,3 +115,5 @@ def remove(path):
         return redirect(url_for('main.browse', path=PARENT_URL))
     except:
         abort(404)
+
+
