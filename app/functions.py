@@ -101,10 +101,14 @@ def _getShareFolder():
     local_path= os.path.dirname(os.path.realpath(__file__))
     return os.path.join(local_path, "Shared")
 
+def checkUserSharedFolder(key_folder):
+    user_folder= getUserSharedPath(key_folder)
+    if not os.path.exists(user_folder):
+        os.makedirs(user_folder)
+
 def sharedWalk(key_folder):
     user_shared_folder = getUserSharedPath(key_folder)
-    if not os.path.exists(user_shared_folder):
-        os.makedirs(user_shared_folder)
+    checkUserSharedFolder(user_shared_folder)
     try:
         stuff= next(os.walk(user_shared_folder))
         folders= stuff[1]
