@@ -88,6 +88,31 @@ def geturlpath(path, key_folder):
     URL_PATH = path[_len:]
     return URL_PATH
 
+def getSharedFile(path):
+    shared_file= os.path.join(_getShareFolder(), path)
+    return shared_file
+
+def getUserSharedPath(key_folder):
+    shared_folder= _getShareFolder()
+    user_shared_folder= os.path.join(shared_folder, key_folder)
+    return user_shared_folder
+
+def _getShareFolder():
+    local_path= os.path.dirname(os.path.realpath(__file__))
+    return os.path.join(local_path, "Shared")
+
+def sharedWalk(key_folder):
+    user_shared_folder = getUserSharedPath(key_folder)
+    if not os.path.exists(user_shared_folder):
+        os.mkdir(user_shared_folder)
+    try:
+        stuff= next(os.walk(user_shared_folder))
+        folders= stuff[1]
+        files= stuff[2]
+        return folders, files
+    except:
+        return None
+
 
 def RemoveHiddenObjects(_list):
     _list2 = list()  # List that contains only visible,
