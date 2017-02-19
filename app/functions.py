@@ -104,7 +104,7 @@ def _getShareFolder():
 def sharedWalk(key_folder):
     user_shared_folder = getUserSharedPath(key_folder)
     if not os.path.exists(user_shared_folder):
-        os.mkdir(user_shared_folder)
+        os.makedirs(user_shared_folder)
     try:
         stuff= next(os.walk(user_shared_folder))
         folders= stuff[1]
