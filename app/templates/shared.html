@@ -34,15 +34,30 @@
         <h4 class="modal-title">Shared Link</h4>
       </div>
       <div class="modal-body">
-        <p>http://104.199.149.72:8000/shared/{{ key_folder }}/{{ file }}</p>
+          <div class="link-text-area">
+          <textarea style="width: 100%" id="link">http://104.199.149.72:8000/shared/{{ key_folder }}/{{file}}</textarea>
+          </div>
+           <button class="btn" data-clipboard-action="copy" data-clipboard-target="#link">Copy</button>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
       </div>
     </div>
+      <!-- endModal -->
 
   </div>
 </div>
 {% endfor %}
 {% endif %}
+<script src="https://cdn.jsdelivr.net/clipboard.js/1.6.0/clipboard.min.js"></script>
+<!-- 3. Instantiate clipboard -->
+    <script>
+    var clipboard = new Clipboard('.btn');
+    clipboard.on('success', function(e) {
+        console.log(e);
+    });
+    clipboard.on('error', function(e) {
+        console.log(e);
+    });
+    </script>
 {% endblock %}
