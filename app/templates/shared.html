@@ -35,9 +35,9 @@
       </div>
       <div class="modal-body">
           <div class="link-text-area">
-          <textarea style="width: 100%" id="link">{{domain_name + url_for('share.sharedFileDownload', path= key_folder + "/" + files_dict[i]) }}</textarea>
+          <textarea style="width: 100%" id="link-{{ i }}">{{domain_name + url_for('share.sharedFileDownload', path= key_folder + "/" + files_dict[i]) }}</textarea>
           </div>
-           <button class="btn" data-clipboard-action="copy" data-clipboard-target="#link">Copy</button>
+           <button class="btn" data-clipboard-action="copy" data-clipboard-target="#link-{{ i }}">Copy</button>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
