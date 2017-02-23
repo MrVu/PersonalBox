@@ -3,13 +3,13 @@
 {% block content %}
 
 {% if files|length > 0 %}
-{% for file in files %}
+{% for i in files_dict %}
 <div class="panel panel-primary">
     <div class="panel-body">
         <div class="col-md-8">
-            <span class="{{classmaker(file)}}" style="margin-right:10px;"></span>
-            <a href="#" data-toggle="modal" data-target="#sharedModal">
-                <span class="glyphicon glyphicon-link"> {{file}}</span>
+            <span class="{{ classmaker(files_dict[i]) }}" style="margin-right:10px;"></span>
+            <a href="#" data-toggle="modal" data-target="#sharedModal-{{ i }}">
+                <span class="glyphicon glyphicon-link"> {{files_dict[i]}}</span>
             </a>
         </div>
 
@@ -18,13 +18,13 @@
 
             <div class="download">
                 <span class="glyphicon glyphicon-remove" style="margin-right:10px;"></span>
-                <a href="{{ url_for('share.remove_shared_file', path=file)}}">Remove</a>
+                <a href="{{ url_for('share.remove_shared_file', path=files_dict[i])}}">Remove</a>
             </div>
             </a>
         </div>
     </div>
 </div>
-<div id="sharedModal" class="modal fade" role="dialog">
+<div id="sharedModal-{{ i }}" class="modal fade" role="dialog">
   <div class="modal-dialog">
 
     <!-- Modal content-->
@@ -35,7 +35,7 @@
       </div>
       <div class="modal-body">
           <div class="link-text-area">
-          <textarea style="width: 100%" id="link">http://104.199.149.72:8000/shared/{{ key_folder }}/{{file}}</textarea>
+          <textarea style="width: 100%" id="link">{{domain_name + url_for('share.sharedFileDownload', path= key_folder + "/" + files_dict[i]) }}</textarea>
           </div>
            <button class="btn" data-clipboard-action="copy" data-clipboard-target="#link">Copy</button>
       </div>
