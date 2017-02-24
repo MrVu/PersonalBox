@@ -1,4 +1,5 @@
 from flask import render_template, session, redirect, url_for, send_from_directory, request, jsonify, abort
+from werkzeug.utils import secure_filename
 from . import main
 from .. import db
 from app import functions
@@ -25,13 +26,15 @@ def root():
 
     if request.method == 'POST' and 'files' in request.files:
         file = request.files['files']
-        CURRENT_PATH = os.path.join(functions.GetBasePath(key_folder), BASE_PATH)
-        try:
-            file.save(os.path.join(CURRENT_PATH, file.filename))
-            response = {'status': 1}
-        except:
-            response = {'status': 0}
-        return jsonify(response)
+        if file and functions.allowed_file(file.filename):
+            CURRENT_PATH = os.path.join(functions.GetBasePath(key_folder), BASE_PATH)
+            file_name= secure_filename(file.filename)
+            try:
+                file.save(os.path.join(CURRENT_PATH, file_name))
+                response = {'status': 1}
+            except:
+                response = {'status': 0}
+            return jsonify(response)
     elif form.validate_on_submit():
         new_folder = form.folder.data
         functions.MkNewDir(new_folder, BASE_PATH, key_folder)
@@ -55,13 +58,15 @@ def browse(path):
     parent_url = functions.geturlpath(parent_local_path, key_folder)
     if request.method == 'POST' and 'files' in request.files:
         file = request.files['files']
-        CURRENT_PATH = os.path.join(functions.GetBasePath(key_folder), BASE_PATH)
-        try:
-            file.save(os.path.join(CURRENT_PATH, file.filename))
-            response = {'status': 1}
-        except:
-            response = {'status': 0}
-        return jsonify(response)
+        if file and functions.allowed_file(file.filename):
+            CURRENT_PATH = os.path.join(functions.GetBasePath(key_folder), BASE_PATH)
+            file_name = secure_filename(file.name)
+            try:
+                file.save(os.path.join(CURRENT_PATH, file_name))
+                response = {'status': 1}
+            except:
+                response = {'status': 0}
+            return jsonify(response)
 
     elif form.validate_on_submit():
         new_folder = form.folder.data

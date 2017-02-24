@@ -117,6 +117,11 @@ def sharedWalk(key_folder):
     except:
         return None
 
+def allowed_file(filename):
+    ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'mp3', 'mp4'])
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 
 def RemoveHiddenObjects(_list):
     _list2 = list()  # List that contains only visible,
