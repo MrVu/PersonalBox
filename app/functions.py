@@ -122,6 +122,15 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+def osWalkJson(folders, files):
+    foldersjson={}
+    filesjson={}
+    for i in range(0, len(folders)):
+        foldersjson[i]= folders[i]
+    for i in range(0, len(files)):
+        filesjson[i]= files[i]
+    return foldersjson, filesjson
+
 
 def RemoveHiddenObjects(_list):
     _list2 = list()  # List that contains only visible,

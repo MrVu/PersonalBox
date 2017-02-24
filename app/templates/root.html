@@ -12,20 +12,20 @@
     <br>
 
 
-    {% if folders|length > 0 %}
-    {% for folder in folders %}
+    {% if foldersjson|length > 0 %}
+    {% for i in foldersjson %}
 
     <div class="panel panel-primary">
         <div class="panel-heading">
             <div class="col-md-8">
-            <a class="white-link" href={{ url_for("main.browse", path=folder)}}>
+            <a class="white-link" href="{{ url_for('main.browse', path=foldersjson[i])}}">
             <span class="glyphicon glyphicon-folder-open" style="margin-right:10px;"></span>
-            {{folder}}
+            {{foldersjson[i]}}
             </a>
             </div>
 
             <div class="col-md-4">
-            <a class="white-link" href={{ url_for("main.remove" , path=BASE_PATH+folder)}}>
+            <a class="white-link" href="#"  data-toggle="modal" data-target="#modalFoldersRemove-{{i}}">
 
             <div class="download">
                 <span class="glyphicon glyphicon-remove" style="margin-right:10px;"></span>
@@ -35,29 +35,49 @@
             </div>
         </div>
     </div>
+<!--Modal Folders loop -->
+<div class="modal fade" id="modalFoldersRemove-{{i}}">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Delete Folder??</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete {{foldersjson[i]}} from Ubox??</p>
+            </div>
+            <div class="modal-footer">
+                <a href="{{url_for('main.remove', path=BASE_PATH + foldersjson[i] )}}" class="btn btn-danger">Delete</a>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Modal loop -->
     {% endfor%}
-
     {% endif %}
 
-    {% if files|length > 0 %}
-    {% for file in files %}
+    {% if filesjson|length > 0 %}
+    {% for i in filesjson %}
     <div class="panel panel-primary">
         <div class="panel-body">
             <div class="col-md-8">
-            <a href={{ url_for("main.browse", path=BASE_PATH+file)}}>
-            <span class="{{classmaker(file)}}" style="margin-right:10px;"></span>
-            {{ file }}
+            <a href={{ url_for("main.browse", path=BASE_PATH+filesjson[i])}}>
+            <span class="{{classmaker(filesjson[i])}}" style="margin-right:10px;"></span>
+            {{ filesjson[i] }}
             </a>
             </div>
             <div class="col-md-4">
-            <a href={{ url_for("main.download" , path=BASE_PATH+file)}}>
+            <a href={{ url_for("main.download" , path=BASE_PATH+filesjson[i])}}>
 
             <div class="download">
                 <span class="glyphicon glyphicon-cloud-download" style="margin-right:10px;"></span>
                 Download
             </div>
             </a>
-            <a href={{ url_for("main.remove" , path=BASE_PATH+file)}}>
+            <a href="#"  data-toggle="modal" data-target="#modalFilesRemove-{{i}}">
 
             <div class="download">
                 <span class="glyphicon glyphicon-remove" style="margin-right:10px;"></span>
@@ -65,7 +85,7 @@
             </div>
             </a>
 
-                <a href="{{ url_for('main.send_to_shared_folder', path= BASE_PATH+ file) }}">
+                <a href="{{ url_for('main.send_to_shared_folder', path= BASE_PATH+ filesjson[i]) }}">
                     <div class="download">
                         <span class="glyphicon glyphicon-link" style="margin-right:10px"></span>
                     </div>
@@ -73,6 +93,27 @@
             </div>
         </div>
     </div>
+<!--Modal Files loop -->
+<div class="modal fade" id="modalFilesRemove-{{i}}">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Delete File??</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete {{filesjson[i]}} from Ubox??</p>
+            </div>
+            <div class="modal-footer">
+                <a href="{{url_for('main.remove', path=BASE_PATH + filesjson[i] )}}" class="btn btn-danger">Delete</a>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Modal loop -->
     {% endfor %}
     {% endif %}
     <div id="myModal" class="modal fade" role="dialog">

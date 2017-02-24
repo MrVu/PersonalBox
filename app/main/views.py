@@ -41,8 +41,9 @@ def root():
         return redirect(url_for('main.root'))
 
     folders, files = functions.ReadPath("", key_folder)
-    return render_template('root.html', form=form, classmaker=classmaker, upload_form=upload_form, folders=folders,
-                           files=files,
+    foldersjson, filesjson= functions.osWalkJson(folders,files)
+    return render_template('root.html', form=form, classmaker=classmaker, upload_form=upload_form, foldersjson=foldersjson,
+                           filesjson=filesjson,
                            BASE_PATH=BASE_PATH)
 
 
@@ -82,8 +83,9 @@ def browse(path):
 
     else:
         folders, files = functions.ReadPath(path, key_folder)
+        foldersjson, filesjson= functions.osWalkJson(folders, files)
         return render_template('browse.html', upload_form=upload_form, classmaker=classmaker, form=form,
-                               folders=folders, files=files,
+                               foldersjson=foldersjson, filesjson=filesjson,
                                BASE_PATH=BASE_PATH, parent_url=parent_url)
 
 
