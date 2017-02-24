@@ -61,7 +61,7 @@ def browse(path):
         file = request.files['files']
         if file and functions.allowed_file(file.filename):
             CURRENT_PATH = os.path.join(functions.GetBasePath(key_folder), BASE_PATH)
-            file_name = secure_filename(file.name)
+            file_name = secure_filename(file.filename)
             try:
                 file.save(os.path.join(CURRENT_PATH, file_name))
                 response = {'status': 1}
