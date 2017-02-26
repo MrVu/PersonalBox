@@ -88,48 +88,39 @@ def geturlpath(path, key_folder):
     URL_PATH = path[_len:]
     return URL_PATH
 
-def getSharedFile(path):
-    shared_file= os.path.join(_getShareFolder(), path)
-    return shared_file
 
-def getUserSharedPath(key_folder):
-    shared_folder= _getShareFolder()
-    user_shared_folder= os.path.join(shared_folder, key_folder)
-    return user_shared_folder
-
-def _getShareFolder():
-    local_path= os.path.dirname(os.path.realpath(__file__))
-    return os.path.join(local_path, "Shared")
-
-def checkUserSharedFolder(key_folder):
-    user_folder= getUserSharedPath(key_folder)
-    if not os.path.exists(user_folder):
-        os.makedirs(user_folder)
-
-def sharedWalk(key_folder):
-    user_shared_folder = getUserSharedPath(key_folder)
-    checkUserSharedFolder(user_shared_folder)
-    try:
-        stuff= next(os.walk(user_shared_folder))
-        folders= stuff[1]
-        files= stuff[2]
-        return folders, files
-    except:
-        return None
 
 def allowed_file(filename):
     ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'mp3', 'mp4'])
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+
 def osWalkJson(folders, files):
-    foldersjson={}
-    filesjson={}
+    foldersjson = {}
+    filesjson = {}
     for i in range(0, len(folders)):
-        foldersjson[i]= folders[i]
+        foldersjson[i] = folders[i]
     for i in range(0, len(files)):
-        filesjson[i]= files[i]
+        filesjson[i] = files[i]
     return foldersjson, filesjson
+
+
+def getParentUrl(path, key_folder):
+    current_path = os.path.join(GetBasePath(key_folder), path)
+    parent_path = parent(current_path, key_folder)
+    parent_url = geturlpath(parent_path, key_folder)
+    return parent_url
+
+
+def getDirectLink(key_folder, parent_url, file_name):
+    if parent_url:
+        return key_folder + '/' + parent_url + '/' + file_name
+    return key_folder + '/' + file_name
+
+def getDownloadPath(path):
+    local_path = os.path.dirname(os.path.realpath(__file__))
+    return os.path.join(local_path,path)
 
 
 def RemoveHiddenObjects(_list):

@@ -7,9 +7,9 @@
 <div class="panel panel-primary">
     <div class="panel-body">
         <div class="col-md-8">
-            <span class="{{ classmaker(files_dict[i]) }}" style="margin-right:10px;"></span>
+            <span class="{{ classmaker(files_dict[i].file_name) }}" style="margin-right:10px;"></span>
             <a href="#" data-toggle="modal" data-target="#sharedModal-{{ i }}">
-                <span class="glyphicon glyphicon-link"> {{files_dict[i]}}</span>
+                <span class="glyphicon glyphicon-link"> {{files_dict[i].file_name}}</span>
             </a>
         </div>
 
@@ -18,7 +18,7 @@
 
             <div class="download">
                 <span class="glyphicon glyphicon-remove" style="margin-right:10px;"></span>
-                <a href="{{ url_for('share.remove_shared_file', path=files_dict[i])}}">Remove</a>
+                <a href="{{ url_for('share.remove_shared_file', file_id=files_dict[i].id)}}">Remove</a>
             </div>
             </a>
         </div>
@@ -35,7 +35,7 @@
       </div>
       <div class="modal-body">
           <div class="link-text-area">
-          <textarea style="width: 100%" id="link-{{ i }}">{{domain_name + url_for('share.sharedFileDownload', path= key_folder + "/" + files_dict[i]) }}</textarea>
+          <textarea style="width: 100%" id="link-{{ i }}">{{domain_name + url_for('share.token_unload', token=files_dict[i].file_url) }}</textarea>
           </div>
            <button class="btn" data-clipboard-action="copy" data-clipboard-target="#link-{{ i }}">Copy</button>
       </div>

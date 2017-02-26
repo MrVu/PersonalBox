@@ -1,4 +1,5 @@
-from flask import render_template, session, redirect, url_for, send_from_directory, request, jsonify, abort
+from flask import render_template, session, redirect, url_for, send_from_directory, request, jsonify, abort, current_app
+from itsdangerous import URLSafeSerializer
 from werkzeug.utils import secure_filename
 from . import main
 from .. import db
@@ -7,6 +8,7 @@ from .forms import NewFolder, FileUpload
 import os, shutil
 from flask_login import login_required, current_user
 from app.classmaker import classmaker
+from app.models import User, Shared
 
 
 @main.route('/', methods=['GET', 'POST'])
@@ -28,7 +30,7 @@ def root():
         file = request.files['files']
         if file and functions.allowed_file(file.filename):
             CURRENT_PATH = os.path.join(functions.GetBasePath(key_folder), BASE_PATH)
-            file_name= secure_filename(file.filename)
+            file_name = secure_filename(file.filename)
             try:
                 file.save(os.path.join(CURRENT_PATH, file_name))
                 response = {'status': 1}
@@ -41,8 +43,9 @@ def root():
         return redirect(url_for('main.root'))
 
     folders, files = functions.ReadPath("", key_folder)
-    foldersjson, filesjson= functions.osWalkJson(folders,files)
-    return render_template('root.html', form=form, classmaker=classmaker, upload_form=upload_form, foldersjson=foldersjson,
+    foldersjson, filesjson = functions.osWalkJson(folders, files)
+    return render_template('root.html', form=form, classmaker=classmaker, upload_form=upload_form,
+                           foldersjson=foldersjson,
                            filesjson=filesjson,
                            BASE_PATH=BASE_PATH)
 
@@ -83,7 +86,7 @@ def browse(path):
 
     else:
         folders, files = functions.ReadPath(path, key_folder)
-        foldersjson, filesjson= functions.osWalkJson(folders, files)
+        foldersjson, filesjson = functions.osWalkJson(folders, files)
         return render_template('browse.html', upload_form=upload_form, classmaker=classmaker, form=form,
                                foldersjson=foldersjson, filesjson=filesjson,
                                BASE_PATH=BASE_PATH, parent_url=parent_url)
@@ -103,11 +106,21 @@ def download(path):
 @login_required
 def send_to_shared_folder(path):
     key_folder = current_user.userkey
-    functions.checkUserSharedFolder(key_folder)
-    base_path = functions.GetBasePath(key_folder)
-    file_path = os.path.join(base_path, path)
-    des_path = functions.getUserSharedPath(key_folder)
-    shutil.copy(file_path, des_path)
+    parent_url = functions.getParentUrl(path, key_folder)
+    if parent_url and parent_url.strip():
+        file_name = path[len(parent_url) + 1:]
+    else:
+        file_name = path[len(parent_url):]
+    url = functions.getDirectLink(key_folder, parent_url, file_name)
+    serializer = URLSafeSerializer(current_app.config['SECRET_KEY'])
+    token = serializer.dumps(url)
+    direct_url = token
+    try:
+        share_file = Shared(file_name=file_name, file_url=direct_url, user=current_user._get_current_object())
+        db.session.add(share_file)
+        db.session.commit()
+    except:
+        return redirect(url_for('share.shared'))
     return redirect(url_for('share.shared'))
 
 
@@ -116,13 +129,12 @@ def send_to_shared_folder(path):
 def remove(path):
     key_folder = current_user.userkey
     CURRENT_PATH = os.path.join(functions.GetBasePath(key_folder), path)
-    PARENT = functions.parent(CURRENT_PATH, key_folder)
-    PARENT_URL = functions.geturlpath(PARENT, key_folder)
+    parent_url = functions.getParentUrl(path, key_folder)
     try:
         if functions.IsFile(path, key_folder):
             os.remove(CURRENT_PATH)
         else:
             shutil.rmtree(CURRENT_PATH)
-        return redirect(url_for('main.browse', path=PARENT_URL))
+        return redirect(url_for('main.browse', path=parent_url))
     except:
         abort(404)
