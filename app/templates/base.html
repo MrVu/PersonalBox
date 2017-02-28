@@ -32,7 +32,8 @@
                                 <span class="caret"></span></button>
                             <ul class="dropdown-menu">
                                 <li><a href={{url_for('auth.logout')}}>LOGOUT</a></li>
-                                <li><a href="#">User Detail</a></li>
+                                <li><a href="{{url_for('auth.edit_profile')}}">USER DETAILS</a></li>
+                                <li><a href="#">CHANGE PASSWORD</a></li>
                             </ul>
                         </div>
                     </div>
@@ -45,6 +46,14 @@
     </div>
 
     <div class="container">
+
+        {% for message in get_flashed_messages() %}
+        <div class="alert alert-warning">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            {{ message }}
+        </div>
+        {% endfor %}
+
         <div class="row">
             <div class="content-primary">
                 <div class="content-header">

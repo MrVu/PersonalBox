@@ -15,26 +15,44 @@
 
 <div class="header">
     <div class="header-logo">
-        <a href="#"></a>
-        <img class="logo" src="{{ url_for('static', filename="images/ubox-logo.png") }}">
+        <a href="{{url_for('main.index')}}">
+            <img class="logo hidden-phone" src="{{ url_for('static', filename='images/ubox-logo.png') }}">
+            <img class="logo hidden-desktop" src="{{ url_for('static', filename='images/ubox-logo-phone.png') }}"
+                 style="padding-left: 20px">
+        </a>
+        <!-- Dropdown menu -->
+        <div class="header-right">
+            <div class="col-md-1">
+                <div class="dropdown">
+                        {% if current_user.is_authenticated %}
+                    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+                        {{current_user.username}}
+                        <span class="caret"></span></button>
+                        {% endif %}
+                    <ul class="dropdown-menu">
+                        <li><a href={{url_for('auth.logout')}}>LOGOUT</a></li>
+                        <li><a href="{{url_for('auth.edit_profile')}}">USER DETAILS</a></li>
+                        <li><a href="{{url_for('auth.change_password')}}">CHANGE PASSWORD</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!--end dropdown menu -->
 
-        <div class="header-right"
-             {% if current_user.is_authenticated %}
-        <button role="presentation" class="btn btn-danger btn-sm"><a class="white-link" href={{url_for('auth.logout')}}>LOG
-            OUT</a></button>
-        {% if current_user.is_authenticated %}
-        {{ current_user.username }}
-        {% endif %}
-        {% endif %}
     </div>
 
-</div>
+    <div class="container">
+        {% for message in get_flashed_messages() %}
+        <div class="alert alert-warning">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            {{ message }}
+        </div>
+        {% endfor %}
 
-<div class="container">
-    <div class="row">
-                {% block content %}
-                {% endblock %}
+        <div class="row">
+            {% block content %}
+            {% endblock %}
+        </div>
     </div>
-</div>
 </body>
 </html>
