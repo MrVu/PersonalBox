@@ -23,7 +23,7 @@ class RegisterForm(FlaskForm):
 class EditForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Length(1, 64), Email()])
     username = StringField('User name',
-                           validators=[DataRequired(), Length(1, 64), Regexp('^[A-Za-z][A-Za-z0-9_.]*$', 0, 'Wrongformat')])
+                           validators=[DataRequired(), Length(1, 64), Regexp('^[A-Za-z][A-Za-z0-9_. ]*$', 0, 'Wrongformat')])
     submit = SubmitField('Submit')
 
 
