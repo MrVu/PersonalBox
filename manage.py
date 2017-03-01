@@ -4,7 +4,7 @@ from app.models import User, Shared
 from flask_script import Manager, Shell
 from flask_migrate import Migrate, MigrateCommand
 
-app = create_app('default')
+app = create_app('unix')
 manager = Manager(app)
 migrate = Migrate(app, db)
 
