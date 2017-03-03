@@ -1,7 +1,7 @@
 from . import auth
 from .. import db
 from ..models import User
-from .. import functions
+from .. import functions, email
 from flask import render_template, redirect, url_for, request, flash
 from .forms import LoginForm, RegisterForm, EditForm, ChangePassword
 from flask_login import login_required, logout_user, login_user, current_user
@@ -14,7 +14,7 @@ def login():
         email = login_form.email.data
         user = User.query.filter_by(email=email).first()
         if user is not None and user.verify_password(login_form.password.data):
-            login_user(user)
+            login_user(user, True)
             return redirect(url_for('main.root'))
         flash('Invalid username or password.')
     return render_template('login.html', login_form=login_form)
@@ -30,14 +30,20 @@ def register():
         else:
             break
     if register_form.validate_on_submit():
-        user = User(email=register_form.email.data,
+        user = User.query.filter_by(email=register_form.email.data)
+        if user is not None:
+            user = User(email=register_form.email.data,
                     username=register_form.username.data,
                     password=register_form.password.data, userkey=random)
-        db.session.add(user)
-        db.session.commit()
-        if not functions.Installed(user.userkey):
-            functions.Install(user.userkey)
-        return redirect(url_for('auth.login'))
+            db.session.add(user)
+            db.session.commit()
+            token = user.generate_confirm_token()
+            email.send_email(user.email, 'Confirm Your Acccount', 'mails/confirm', user=user, token=token)
+            if not functions.Installed(user.userkey):
+                functions.Install(user.userkey)
+            return redirect(url_for('auth.login'))
+        flash('Email is already taken')
+        return redirect(url_for('auth.register'))
     return render_template('register.html', register_form=register_form)
 
 
@@ -70,6 +76,15 @@ def change_password():
             flash('Your Password is incorrect')
             return redirect(url_for('auth.change_password'))
     return render_template('change_password.html', password_form=password_form)
+
+
+@auth.route('/auth/confirm/<string:token>')
+def confirm(token):
+    if User.confirm(token):
+        flash('You have confirmed your account. Thanks!')
+    else:
+        flash('The confirmation link is invalid or has expired.')
+    return redirect(url_for('main.index'))
 
 
 @auth.route('/logout')

@@ -5,7 +5,14 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 class Config:
     SECRET_KEY = os.environ.get('SECRET') or 'Whatever123`'
-    SERVER_DOMAIN = os.environ.get('SERVER_DOMAIN') or "127.0.0.1:8000"
+    MAIL_SERVER = 'smtp.googlemail.com'
+    MAIL_PORT = 587
+    MAIL_USE_TLS = True
+    MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
+    MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
+    FLASKY_MAIL_SUBJECT_PREFIX = '[Ubox]'
+    FLASKY_MAIL_SENDER = 'Ubox Admin <admin@ubox.technology>'
+    SQLALCHEMY_TRACK_MODIFICATIONS= True
 
     @staticmethod
     def init_app(app):

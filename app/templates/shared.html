@@ -35,7 +35,7 @@
       </div>
       <div class="modal-body">
           <div class="link-text-area">
-          <textarea style="width: 100%" id="link-{{ i }}">{{domain_name + url_for('share.token_unload', token=files_dict[i].file_url) }}</textarea>
+          <textarea style="width: 100%" id="link-{{ i }}">{{url_for('share.token_unload', token=files_dict[i].file_url, _external=True) }}</textarea>
           </div>
            <button class="btn" data-clipboard-action="copy" data-clipboard-target="#link-{{ i }}">Copy</button>
       </div>

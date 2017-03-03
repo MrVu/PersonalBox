@@ -11,19 +11,12 @@ from app.models import Shared, User
 @share.route('/shared')
 @login_required
 def shared():
-    domain_name = current_app.config['SERVER_DOMAIN']
     files_dict = {}
     files = Shared.query.filter_by(user=current_user._get_current_object()).all()
     for i in range(0, len(files)):
         files_dict[i] = files[i]
-    return render_template('shared.html', domain_name=domain_name, files_dict=files_dict, files=files,
+    return render_template('shared.html', files_dict=files_dict, files=files,
                            classmaker=classmaker)
-
-
-@share.route('/shared/<path:path>')
-def sharedFileDownload(path):
-    shared_file = functions.getSharedFile(path)
-    return send_file(shared_file, as_attachment=True)
 
 
 @share.route('/shared/<string:token>')

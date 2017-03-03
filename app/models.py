@@ -36,19 +36,23 @@ class User(db.Model, UserMixin):
 
     def generate_confirm_token(self, expiration=3600):
         s = Serializer(current_app.config['SECRET_KEY'], expiration)
-        return s.dump({'confirm': self.id})
+        return s.dumps({'confirm': self.id})
 
-    def confirm(self, token):
+    @classmethod
+    def confirm(cls, token):
         s = Serializer(current_app.config['SECRET_KEY'])
         try:
             data = s.loads(token)
         except:
             return False
-        if data.get('confirm') != self.id:
-            return False
-        self.confirmed = True
-        db.session.add(self)
-        return True
+        id = data.get('confirm')
+        user = User.query.get(id)
+        if user is not None:
+            user.confirmed = True
+            db.session.add(user)
+            db.session.commit()
+            return True
+        return False
 
 
 @login_manager.user_loader
