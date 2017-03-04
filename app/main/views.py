@@ -119,8 +119,8 @@ def send_to_shared_folder(path):
         share_file = Shared(file_name=file_name, file_url=direct_url, user=current_user._get_current_object())
         db.session.add(share_file)
         db.session.commit()
-    except:
-        return redirect(url_for('share.shared'))
+    except Exception as e:
+        return "ERROR HAPPEN " + e
     return redirect(url_for('share.shared'))
 
 
