@@ -8,7 +8,7 @@ from flask import current_app
 class Shared(db.Model):
     __tablename__ = 'shared'
     id = db.Column(db.Integer, primary_key=True)
-    file_name = db.Column(db.String, unique=True)
+    file_name = db.Column(db.String)
     file_url = db.Column(db.String, unique=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
@@ -37,6 +37,16 @@ class User(db.Model, UserMixin):
     def generate_confirm_token(self, expiration=3600):
         s = Serializer(current_app.config['SECRET_KEY'], expiration)
         return s.dumps({'confirm': self.id})
+
+    @classmethod
+    def token_load(cls, token):
+        s = Serializer(current_app.config['SECRET_KEY'])
+        try:
+            data = s.loads(token)
+        except:
+            return False
+        user_id = data.get('confirm')
+        return user_id
 
     @classmethod
     def confirm(cls, token):
