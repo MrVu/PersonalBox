@@ -9,6 +9,8 @@ from flask_login import login_required, logout_user, login_user, current_user
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('main.index'))
     login_form = LoginForm()
     if login_form.validate_on_submit():
         email = login_form.email.data
@@ -22,6 +24,8 @@ def login():
 
 @auth.route('/register', methods=['GET', 'POST'])
 def register():
+    if current_user.is_authenticated:
+        return redirect(url_for('main.index'))
     register_form = RegisterForm()
     while True:
         random = functions.RandomID()
@@ -30,7 +34,7 @@ def register():
         else:
             break
     if register_form.validate_on_submit():
-        user = User.query.filter_by(email=register_form.email.data)
+        user = User.query.filter_by(email=register_form.email.data).first()
         if user is not None:
             user = User(email=register_form.email.data,
                     username=register_form.username.data,
@@ -39,6 +43,7 @@ def register():
             db.session.commit()
             token = user.generate_confirm_token()
             email.send_email(user.email, 'Confirm Your Acccount', 'mails/confirm', user=user, token=token)
+            flash("An email is sent to your account, please confirm")
             if not functions.Installed(user.userkey):
                 functions.Install(user.userkey)
             return redirect(url_for('auth.login'))
@@ -81,10 +86,10 @@ def change_password():
 @auth.route('/auth/confirm/<string:token>')
 def confirm(token):
     if User.confirm(token):
-        flash('You have confirmed your account. Thanks!')
+        flash('You have confirmed your account, now you can login. Thanks!')
     else:
         flash('The confirmation link is invalid or has expired.')
-    return redirect(url_for('main.index'))
+    return redirect(url_for('auth.login'))
 
 
 @auth.route('/logout')
