@@ -3,7 +3,7 @@ from .. import db
 from ..models import User
 from .. import functions, email
 from flask import render_template, redirect, url_for, request, flash
-from .forms import LoginForm, RegisterForm, EditForm, ChangePassword
+from .forms import LoginForm, RegisterForm, EditForm, ChangePassword, ForgotPassword, EmailResetPassword
 from flask_login import login_required, logout_user, login_user, current_user
 
 
@@ -35,10 +35,10 @@ def register():
             break
     if register_form.validate_on_submit():
         user = User.query.filter_by(email=register_form.email.data).first()
-        if user is not None:
+        if user is None:
             user = User(email=register_form.email.data,
-                    username=register_form.username.data,
-                    password=register_form.password.data, userkey=random)
+                        username=register_form.username.data,
+                        password=register_form.password.data, userkey=random)
             db.session.add(user)
             db.session.commit()
             token = user.generate_confirm_token()
@@ -68,6 +68,7 @@ def edit_profile():
 
 
 @auth.route('/auth/changepassword', methods=['GET', 'POST'])
+@login_required
 def change_password():
     password_form = ChangePassword()
     if password_form.validate_on_submit():
@@ -81,6 +82,31 @@ def change_password():
             flash('Your Password is incorrect')
             return redirect(url_for('auth.change_password'))
     return render_template('change_password.html', password_form=password_form)
+
+
+@auth.route('/auth/resetpassword')
+def send_password_token():
+    email_form = EmailResetPassword()
+    if email_form.validate_on_submit():
+        user = User.query.filter_by(email= email_form.email.data)
+        token = user.generate_confirm_token()
+        email.send_email(user.email, 'Reset Your Password', 'mails/reset_password', user=user, token=token)
+        flash("An email is sent to your account")
+        return redirect(url_for('auth.send_password_token'))
+    return render_template('reset_password.html')
+
+
+@auth.route('/auth/password/<string:token>', methods=['GET', 'POST'])
+def forgot_password(token):
+    user_id = User.token_load(token)
+    user = User.query.get(user_id)
+    login_user(user)
+    forgot_password_form = ForgotPassword()
+    if forgot_password_form.validate_on_submit():
+        user.password = forgot_password_form.password.data
+        db.session.add(user)
+        db.session.commit()
+    return render_template('forgot_password.html', forgot_password_form=forgot_password_form)
 
 
 @auth.route('/auth/confirm/<string:token>')
