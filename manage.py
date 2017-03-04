@@ -6,7 +6,7 @@ from flask_migrate import Migrate, MigrateCommand
 
 app = create_app('unix')
 manager = Manager(app)
-migrate = Migrate(app, db, directory='migrations')
+migrate = Migrate(app, db)
 
 
 def make_shell_context():
