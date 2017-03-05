@@ -188,7 +188,7 @@
                 <form method="POST">
                     {{ form.csrf_token }}
                     {{ form.hidden_tag() }}
-                    {{ form.folder.label }} {{ form.folder(size=20) }} {{form.submit()}}
+                    FOLDER {{ form.folder(size=20) }} {{form.submit()}}
                 </form>
             </div>
 
@@ -211,7 +211,7 @@
             <div class="modal-header">
                 <button type="button" class="close"
                         data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Upload</h4>
+                <h4 class="modal-title">UPLOAD</h4>
             </div>
             <div class="modal-body">
                 <form id="upload-form" method="POST" enctype="multipart/form-data"
