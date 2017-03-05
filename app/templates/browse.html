@@ -2,84 +2,84 @@
 
 {% block content %}
 
-    {% if route %}
-    <ul class="breadcrumb">
-        <li><a href="{{ url_for("main.root")}}">root</a>
-            {% for string in route %}
-        <li><a>{{string}}</a></li>
-        {% endfor %}
-    </ul>
-    {% endif %}
+{% if route %}
+<ul class="breadcrumb">
+    <li><a href="{{ url_for(" main.root")}}">root</a>
+        {% for string in route %}
+    <li><a>{{string}}</a></li>
+    {% endfor %}
+</ul>
+{% endif %}
 
-    {% if (foldersjson|length > 0) or (filesjson|length > 0) %}
-    <a href="/browse/{{ parent_url }}">
-        <div class="panel panel-info">
-            <div class="panel-heading">
-                <span class="glyphicon glyphicon glyphicon-arrow-left" style="margin-right:10px;"></span>
-                Back
-            </div>
-        </div>
-    </a>
-    {% endif %}
-    <div class="action-panel">
-        <button type="button" class="btn btn-info btn-md" data-toggle="modal" data-target="#myModal">NEW
-            FOLDER
-        </button>
-        <button type="button" class="btn btn-info btn-md" data-toggle="modal" data-target="#uploadModal">UPLOAD
-        </button>
-    </div>
-    <br>
-    <br>
-
-    {% if (foldersjson|length == 0) and (filesjson|length == 0) and not Error404 %}
-    <a href="/browse/{{ parent_url }}">
-        <div class="panel panel-warning">
-            <div class="panel-heading">
-                <span class="glyphicon glyphicon glyphicon-arrow-left" style="margin-right:10px;"></span>
-                Nothing here. Click to go back.
-            </div>
-        </div>
-    </a>
-    {% endif %}
-
-    {% if Error404 %}
-    <a href="javascript:history.back()">
-        <div class="panel panel-danger">
-            <div class="panel-heading">
-                <span class="glyphicon glyphicon glyphicon-arrow-left" style="margin-right:10px;"></span>
-                Error 404, not found.
-            </div>
-            <div class="panel-body">
-                The file was deleted or didn't exist at all.
-                <br>
-                However, mister <strong>{{ClientIP}}</strong>, this incident was logged.
-            </div>
-        </div>
-    </a>
-    {% endif %}
-
-    {% if foldersjson|length > 0 %}
-    {% for i in foldersjson %}
-    <div class="panel panel-primary">
+{% if (foldersjson|length > 0) or (filesjson|length > 0) %}
+<a href="/browse/{{ parent_url }}">
+    <div class="panel panel-info">
         <div class="panel-heading">
-            <div class="col-md-8">
+            <span class="glyphicon glyphicon glyphicon-arrow-left" style="margin-right:10px;"></span>
+            Back
+        </div>
+    </div>
+</a>
+{% endif %}
+<div class="action-panel">
+    <button type="button" class="btn btn-info btn-md" data-toggle="modal" data-target="#myModal">NEW
+        FOLDER
+    </button>
+    <button type="button" class="btn btn-info btn-md" data-toggle="modal" data-target="#uploadModal">UPLOAD
+    </button>
+</div>
+<br>
+<br>
+
+{% if (foldersjson|length == 0) and (filesjson|length == 0) and not Error404 %}
+<a href="/browse/{{ parent_url }}">
+    <div class="panel panel-warning">
+        <div class="panel-heading">
+            <span class="glyphicon glyphicon glyphicon-arrow-left" style="margin-right:10px;"></span>
+            Nothing here. Click to go back.
+        </div>
+    </div>
+</a>
+{% endif %}
+
+{% if Error404 %}
+<a href="javascript:history.back()">
+    <div class="panel panel-danger">
+        <div class="panel-heading">
+            <span class="glyphicon glyphicon glyphicon-arrow-left" style="margin-right:10px;"></span>
+            Error 404, not found.
+        </div>
+        <div class="panel-body">
+            The file was deleted or didn't exist at all.
+            <br>
+            However, mister <strong>{{ClientIP}}</strong>, this incident was logged.
+        </div>
+    </div>
+</a>
+{% endif %}
+
+{% if foldersjson|length > 0 %}
+{% for i in foldersjson %}
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <div class="col-md-8">
             <a class="white-link" href={{ url_for("main.browse", path=BASE_PATH + "/"+foldersjson[i])}}>
             <span class="glyphicon glyphicon-folder-open" style="margin-right:10px;"></span>
             {{foldersjson[i]}}
             </a>
-            </div>
-            <div class="col-md-4">
-            <a class="white-link" href="#"  data-toggle="modal" data-target="#modalFoldersRemove-{{i}}">
-
-            <div class="download">
-                <span class="glyphicon glyphicon-remove" style="margin-right:10px;"></span>
-                Remove
-            </div>
-            </a>
-            </div>
-
         </div>
+        <div class="col-md-4">
+            <a class="white-link" href="#" data-toggle="modal" data-target="#modalFoldersRemove-{{i}}">
+
+                <div class="download">
+                    <span class="glyphicon glyphicon-remove" style="margin-right:10px;"></span>
+                    Remove
+                </div>
+            </a>
+        </div>
+
     </div>
+</div>
 <!--Modal Folders loop -->
 <div class="modal fade" id="modalFoldersRemove-{{i}}">
     <div class="modal-dialog" role="document">
@@ -101,21 +101,21 @@
     </div>
 </div>
 <!-- End Modal loop -->
-    {% endfor%}
-    {% endif %}
+{% endfor%}
+{% endif %}
 
-    {% if filesjson|length > 0 %}
-    {% for i in filesjson %}
-    <div class="panel panel-primary">
-        <div class="panel-body">
-            <div class="col-md-8">
+{% if filesjson|length > 0 %}
+{% for i in filesjson %}
+<div class="panel panel-primary">
+    <div class="panel-body">
+        <div class="col-md-8">
             <a href={{ url_for("main.browse", path=BASE_PATH+"/"+filesjson[i])}}>
             <span class="{{classmaker(filesjson[i])}}" style="margin-right:10px;"></span>
             {{filesjson[i]}}
             </a>
-            </div>
+        </div>
 
-            <div class="col-md-4">
+        <div class="col-md-4">
             <a href={{ url_for("main.download" , path=BASE_PATH+"/"+filesjson[i])}}>
 
             <div class="download">
@@ -123,107 +123,141 @@
                 Download
             </div>
             </a>
-            <a href="#"  data-toggle="modal" data-target="#modalFilesRemove-{{i}}">
+            <a href="#" data-toggle="modal" data-target="#modalFilesRemove-{{i}}">
 
-            <div class="download">
-                <span class="glyphicon glyphicon-remove" style="margin-right:10px;"></span>
-                Remove
-            </div>
+                <div class="download">
+                    <span class="glyphicon glyphicon-remove" style="margin-right:10px;"></span>
+                    Remove
+                </div>
             </a>
-                <a href="{{ url_for('main.send_to_shared_folder', path= BASE_PATH + '/' + filesjson[i]) }}">
-                    <div class="download">
-                        <span class="glyphicon glyphicon-link" style="margin-right:10px"></span>
-                    </div>
-                </a>
-            </div>
+            {% if current_user.confirmed %}
+            <a href="{{ url_for('main.send_to_shared_folder', path= BASE_PATH + '/' + filesjson[i]) }}">
+                <div class="download">
+                    <span class="glyphicon glyphicon-link" style="margin-right:10px">Share</span>
+                </div>
+            </a>
+            {% else %}
+            <!-- Unconfirmed account -->
+            <a href="#" data-toggle="modal" data-target="#modal-unconfirmed">
+                <div class="download">
+                    <span class="glyphicon glyphicon-link">Share</span>
+                </div>
+            </a>
+            <!-- End Unconfirmed -->
+            {% endif %}
         </div>
     </div>
+</div>
 <!--Modal Files loop -->
 <div class="modal fade" id="modalFilesRemove-{{i}}">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Delete File??</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <p>Are you sure you want to delete {{filesjson[i]}} from Ubox??</p>
-      </div>
-      <div class="modal-footer">
-          <a href="{{url_for('main.remove', path=BASE_PATH + '/' + filesjson[i] )}}" class="btn btn-danger">Delete</a>
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-      </div>
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Delete File??</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete {{filesjson[i]}} from Ubox??</p>
+            </div>
+            <div class="modal-footer">
+                <a href="{{url_for('main.remove', path=BASE_PATH + '/' + filesjson[i] )}}"
+                   class="btn btn-danger">Delete</a>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 <!-- End Modal loop -->
-    {% endfor %}
-    {% endif %}
-    <div id="myModal" class="modal fade" role="dialog">
-        <div class="modal-dialog">
+{% endfor %}
+{% endif %}
+<div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
 
-            <!-- Modal content-->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close"
-                            data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">NEW FOLDER</h4>
-                </div>
-                <div class="modal-body">
-
-
-                    <form method="POST">
-                        {{ form.csrf_token }}
-                        {{ form.hidden_tag() }}
-                        {{ form.folder.label }} {{ form.folder(size=20) }} {{form.submit()}}
-                    </form>
-                </div>
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">NEW FOLDER</h4>
+            </div>
+            <div class="modal-body">
 
 
-                <div
-                        class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close
-                    </button>
-
-                </div>
+                <form method="POST">
+                    {{ form.csrf_token }}
+                    {{ form.hidden_tag() }}
+                    {{ form.folder.label }} {{ form.folder(size=20) }} {{form.submit()}}
+                </form>
             </div>
 
+
+            <div
+                    class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close
+                </button>
+
+            </div>
         </div>
+
     </div>
-    <div id="uploadModal" class="modal fade" role="dialog">
-        <div class="modal-dialog">
+</div>
+<div id="uploadModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
 
-            <!-- Modal content-->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close"
-                            data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Upload</h4>
-                </div>
-                <div class="modal-body">
-                    <form id="upload-form" method="POST" enctype="multipart/form-data"
-                          action="{{ url_for('main.browse', path= BASE_PATH) }}">
-                        <input id="fileupload" type="file" name="files">
-                        <input id="upload-file-btn" type="submit">
-                    </form>
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Upload</h4>
+            </div>
+            <div class="modal-body">
+                <form id="upload-form" method="POST" enctype="multipart/form-data"
+                      action="{{ url_for('main.browse', path= BASE_PATH) }}">
+                    <input id="fileupload" type="file" name="files">
+                    <input id="upload-file-btn" type="submit">
+                </form>
 
-                    <div class="progress">
-                        <div id="progress-bar" class="progress-bar" role="progressbar" aria-valuenow="60"
-                             aria-valuemin="0" aria-valuemax="100" style="width: 0%">0%
-                        </div>
+                <div class="progress">
+                    <div id="progress-bar" class="progress-bar" role="progressbar" aria-valuenow="60"
+                         aria-valuemin="0" aria-valuemax="100" style="width: 0%">0%
                     </div>
+                </div>
 
-                </div>
-                <div
-                        class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                </div>
             </div>
+            <div
+                    class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
 
+    </div>
+</div>
+
+<!--Modal unconfirmed -->
+<div class="modal fade" id="modal-unconfirmed">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirm Email</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Please confirm your email to use this feature</p>
+            </div>
+            <div class="modal-footer">
+                <a href="#"
+                   class="btn btn-success">Resend</a>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
         </div>
     </div>
+</div>
+<!-- End Modal-->
 <script>
 $(function() {
     $('#upload-file-btn').click(function(event) {
@@ -264,6 +298,7 @@ $(function() {
         });
     });
 });
+
 
 </script>
 {% endblock %}

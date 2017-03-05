@@ -84,12 +84,21 @@
                 Remove
             </div>
             </a>
-
+                {% if current_user.confirmed %}
                 <a href="{{ url_for('main.send_to_shared_folder', path= BASE_PATH+ filesjson[i]) }}">
                     <div class="download">
-                        <span class="glyphicon glyphicon-link" style="margin-right:10px"></span>
+                        <span class="glyphicon glyphicon-link" style="margin-right:10px">Share</span>
                     </div>
                 </a>
+                {% else %}
+                <!-- Unconfirmed account -->
+                <a href="#" data-toggle="modal" data-target="#modal-unconfirmed">
+                    <div class="download">
+                        <span class="glyphicon glyphicon-link">Share</span>
+                    </div>
+                </a>
+                <!-- End Unconfirmed -->
+                {% endif %}
             </div>
         </div>
     </div>
@@ -177,6 +186,32 @@
 
         </div>
     </div>
+
+
+<!--Modal unconfirmed -->
+<div class="modal fade" id="modal-unconfirmed">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirm Email</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Please confirm your email to use this feature</p>
+            </div>
+            <div class="modal-footer">
+                <a href="#"
+                   class="btn btn-success">Resend</a>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Modal-->
+
+
 <script>
 $(function() {
     $('#upload-file-btn').click(function(event) {

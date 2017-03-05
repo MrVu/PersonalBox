@@ -47,8 +47,9 @@ def register():
             if not functions.Installed(user.userkey):
                 functions.Install(user.userkey)
             return redirect(url_for('auth.login'))
-        flash('Email is already taken')
-        return redirect(url_for('auth.register'))
+        else:
+            flash('Email is already taken')
+            return redirect(url_for('auth.register'))
     return render_template('register.html', register_form=register_form)
 
 
