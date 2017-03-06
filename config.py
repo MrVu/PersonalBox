@@ -12,6 +12,7 @@ class Config:
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
     FLASKY_MAIL_SUBJECT_PREFIX = '[Ubox]'
     FLASKY_MAIL_SENDER = 'Ubox Admin <admin@ubox.technology>'
+    UBOX_ADMIN= os.environ.get('UBOX_ADMIN')
     SQLALCHEMY_TRACK_MODIFICATIONS= True
 
     @staticmethod
@@ -22,6 +23,29 @@ class Config:
 class ProductionConfig(Config):
     DEBUG = False
     SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE') or 'sqlite:///' + os.path.join(basedir, 'data-dev.sqlite')
+
+    @classmethod
+    def init_app(cls, app):
+        Config.init_app(app)
+
+        # email errors to the administrators
+        import logging
+        from logging.handlers import SMTPHandler
+        credentials = None
+        secure = None
+        if getattr(cls, 'MAIL_USERNAME', None) is not None:
+            credentials = (cls.MAIL_USERNAME, cls.MAIL_PASSWORD)
+            if getattr(cls, 'MAIL_USE_TLS', None):
+                secure = ()
+        mail_handler = SMTPHandler(
+            mailhost=(cls.MAIL_SERVER, cls.MAIL_PORT),
+            fromaddr=cls.FLASKY_MAIL_SENDER,
+            toaddrs=[cls.UBOX_ADMIN],
+            subject=cls.FLASKY_MAIL_SUBJECT_PREFIX + ' Application Error',
+            credentials=credentials,
+            secure=secure)
+        mail_handler.setLevel(logging.ERROR)
+        app.logger.addHandler(mail_handler)
 
 
 class DevelopmentConfig(Config):
