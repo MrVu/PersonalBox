@@ -13,8 +13,14 @@
             {{ login_form.hidden_tag() }}
             {{ login_form.email(class="form-control", placeholder="Email") }}
             {{ login_form.password(class="form-control", placeholder="Password") }}
-            {{login_form.submit(class="btn btn-lg btn-primary btn-block")}}
-            <a class="btn btn-lg btn-primary btn-block" href={{url_for('auth.register')}}>Register</a>
+            <div class="remember-me">
+            {{ login_form.remember_me }} Keep me login
+            </div>
+            {{ login_form.submit(class="btn btn-lg btn-primary btn-block") }}
+            <a class="btn btn-lg btn-primary btn-block" href={{url_for('auth.register')}}>Register For 10GB Free</a>
+            <div class="forgot-password">
+            <a href="{{ url_for('auth.get_forgot_email') }}">Forgot your password??</a>
+            </div>
         </form>
     </div>
 </div>

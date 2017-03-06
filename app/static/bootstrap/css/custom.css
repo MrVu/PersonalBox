@@ -114,3 +114,10 @@ padding-top: 25px;
         display: none;
     }
 }
+
+.forgot-password{
+    margin: 10px 0 0 5px;
+}
+.remember-me{
+    margin-bottom: 15px;
+}

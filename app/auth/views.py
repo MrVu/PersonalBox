@@ -2,7 +2,7 @@ from . import auth
 from .. import db
 from ..models import User
 from .. import functions, email
-from flask import render_template, redirect, url_for, request, flash
+from flask import render_template, redirect, url_for, request, flash, abort
 from .forms import LoginForm, RegisterForm, EditForm, ChangePassword, ForgotPassword, EmailResetPassword
 from flask_login import login_required, logout_user, login_user, current_user
 
@@ -16,7 +16,7 @@ def login():
         email = login_form.email.data
         user = User.query.filter_by(email=email).first()
         if user is not None and user.verify_password(login_form.password.data):
-            login_user(user, True)
+            login_user(user, login_form.remember_me.data)
             return redirect(url_for('main.root'))
         flash('Invalid username or password.')
     return render_template('login.html', login_form=login_form)
@@ -85,20 +85,24 @@ def change_password():
     return render_template('change_password.html', password_form=password_form)
 
 
-@auth.route('/auth/resetpassword')
-def send_password_token():
+@auth.route('/auth/forgot?email', methods=['GET', 'POST'])
+def get_forgot_email():
     email_form = EmailResetPassword()
     if email_form.validate_on_submit():
-        user = User.query.filter_by(email= email_form.email.data)
-        token = user.generate_confirm_token()
-        email.send_email(user.email, 'Reset Your Password', 'mails/reset_password', user=user, token=token)
-        flash("An email is sent to your account")
-        return redirect(url_for('auth.send_password_token'))
-    return render_template('reset_password.html')
+        user = User.query.filter_by(email=email_form.email.data).first()
+        if user is not None:
+            token = user.generate_confirm_token()
+            email.send_email(user.email, 'Reset Your Password', 'mails/reset_password', user=user, token=token)
+            flash("An email is sent to your account to reset your password")
+            return redirect(url_for('auth.get_forgot_email'))
+        else:
+            flash('Sorry, we cannot find your email')
+        return redirect(url_for('auth.get_forgot_email'))
+    return render_template('forgot_email.html', email_form=email_form)
 
 
 @auth.route('/auth/password/<string:token>', methods=['GET', 'POST'])
-def forgot_password(token):
+def reset_password(token):
     user_id = User.token_load(token)
     user = User.query.get(user_id)
     login_user(user)
@@ -107,6 +111,8 @@ def forgot_password(token):
         user.password = forgot_password_form.password.data
         db.session.add(user)
         db.session.commit()
+        flash('Your password has been changed')
+        return redirect(url_for('main.index'))
     return render_template('forgot_password.html', forgot_password_form=forgot_password_form)
 
 
@@ -117,6 +123,14 @@ def confirm(token):
     else:
         flash('The confirmation link is invalid or has expired.')
     return redirect(url_for('auth.login'))
+
+
+@auth.route('/auth/resend?email')
+def resend_email():
+    user = current_user._get_current_object()
+    token = user.generate_confirm_token()
+    email.send_email(user.email, 'Confirm Your Account', 'mails/confirm', user=user, token=token)
+    return redirect(url_for('main.index'))
 
 
 @auth.route('/logout')
