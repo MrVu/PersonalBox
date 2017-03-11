@@ -35,7 +35,7 @@
                                 <li><a href="{{url_for('auth.edit_profile')}}">USER DETAILS</a></li>
                                 <li><a href="{{url_for('auth.change_password')}}">CHANGE PASSWORD</a></li>
                                 {% if current_user.is_authenticated %}
-                                <li><a href="#">{{ '%.2f' %(current_user.storage_used/ current_user.storage *100) }}% Storage</a></li>
+                                <li><a href="#">{{ '%.2f' %(current_user.storage_used/ current_user.storage *100) }}% STORAGE</a></li>
                                 {% endif %}
                             </ul>
                         </div>
