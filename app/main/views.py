@@ -45,6 +45,11 @@ def root():
                 current_app.logger.warning(e)
                 response = {'status': 0}
             return jsonify(response)
+        else:
+            flash("Sorry, your file extension is not allowed at Ubox")
+            response = {'status': 0}
+            current_app.logger.warning("Some one upload wrong extention: " + current_user.email + ':' + file.filename)
+            return jsonify(response)
     elif form.validate_on_submit():
         new_folder = form.folder.data
         functions.MkNewDir(new_folder, BASE_PATH, key_folder)
@@ -85,6 +90,11 @@ def browse(path):
             except Exception as e:
                 current_app.logger.warning(e)
                 response = {'status': 0}
+            return jsonify(response)
+        else:
+            flash("Sorry, your file extension is not allowed at Ubox")
+            response = {'status': 0}
+            current_app.logger.warning("Some one upload wrong extention: " + current_user.email + ':' + file.filename)
             return jsonify(response)
 
     elif form.validate_on_submit():
