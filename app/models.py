@@ -22,6 +22,17 @@ class User(db.Model, UserMixin):
     password_hash = db.Column(db.String(128))
     confirmed = db.Column(db.Boolean, default=False)
     shared_file = db.relationship('Shared', backref='user')
+    storage = db.Column(db.Float)
+    storage_used = db.Column(db.Float)
+
+    def __init__(self, **kwargs):
+        super(User, self).__init__(**kwargs)
+        if self.storage is None:
+            self.storage = 1 * 1024 * 1024 * 1024
+        if self.storage_used is None:
+            self.storage_used = 0
+        db.session.add(self)
+        db.session.commit()
 
     @property
     def password(self):

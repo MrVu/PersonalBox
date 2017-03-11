@@ -1,4 +1,5 @@
-from flask import render_template, session, redirect, url_for, send_from_directory, request, jsonify, abort, current_app
+from flask import render_template, session, redirect, url_for, send_from_directory, request, jsonify, abort, \
+    current_app, flash
 from itsdangerous import URLSafeSerializer
 from werkzeug.utils import secure_filename
 from . import main
@@ -7,7 +8,7 @@ from app import functions
 from .forms import NewFolder, FileUpload
 import os, shutil
 from flask_login import login_required, current_user
-from app.classmaker import classmaker
+from app.files import *
 from app.models import User, Shared
 
 
@@ -28,13 +29,20 @@ def root():
 
     if request.method == 'POST' and 'files' in request.files:
         file = request.files['files']
+        file_length = request.content_length
+        if not check_storage_limit(current_user, file_length):
+            flash('Sorry you out of your storage, please upgrade account')
+            response = {'status': 0}
+            return jsonify(response)
         if file and functions.allowed_file(file.filename):
-            CURRENT_PATH = os.path.join(functions.GetBasePath(key_folder), BASE_PATH)
+            current_path = os.path.join(functions.GetBasePath(key_folder), BASE_PATH)
             file_name = secure_filename(file.filename)
             try:
-                file.save(os.path.join(CURRENT_PATH, file_name))
+                file.save(os.path.join(current_path, file_name))
+                update_used_storage(current_user, file_length)
                 response = {'status': 1}
-            except:
+            except Exception as e:
+                current_app.logger.warning(e)
                 response = {'status': 0}
             return jsonify(response)
     elif form.validate_on_submit():
@@ -57,18 +65,25 @@ def browse(path):
     BASE_PATH = path
     form = NewFolder()
     upload_form = FileUpload()
-    CURRENT_PATH = os.path.join(functions.GetBasePath(key_folder), BASE_PATH)
-    parent_local_path = functions.parent(CURRENT_PATH, key_folder)
+    current_path = os.path.join(functions.GetBasePath(key_folder), BASE_PATH)
+    parent_local_path = functions.parent(current_path, key_folder)
     parent_url = functions.geturlpath(parent_local_path, key_folder)
     if request.method == 'POST' and 'files' in request.files:
         file = request.files['files']
+        file_length = request.content_length
+        if not check_storage_limit(current_user, file_length):
+            flash('Sorry you out of your storage, please upgrade account')
+            response = {'status': 0}
+            return jsonify(response)
         if file and functions.allowed_file(file.filename):
-            CURRENT_PATH = os.path.join(functions.GetBasePath(key_folder), BASE_PATH)
+            current_path = os.path.join(functions.GetBasePath(key_folder), BASE_PATH)
             file_name = secure_filename(file.filename)
             try:
-                file.save(os.path.join(CURRENT_PATH, file_name))
+                file.save(os.path.join(current_path, file_name))
+                update_used_storage(current_user, file_length)
                 response = {'status': 1}
-            except:
+            except Exception as e:
+                current_app.logger.warning(e)
                 response = {'status': 0}
             return jsonify(response)
 
@@ -77,7 +92,7 @@ def browse(path):
         functions.MkNewDir(new_folder, path, key_folder)
         return redirect(url_for('main.browse', path=path))
 
-    if functions.ReadPath(path, key_folder) == None:
+    if functions.ReadPath(path, key_folder) is None:
         Error404 = True
         return render_template('browse.html', Error404=Error404, form=form, upload_form=upload_form)
 
@@ -98,7 +113,8 @@ def download(path):
     try:
         key_folder = current_user.userkey
         return send_from_directory(functions.GetBasePath(key_folder), path, as_attachment=True)
-    except:
+    except Exception as e:
+        current_app.logger.error(e)
         abort(404)
 
 
@@ -120,6 +136,7 @@ def send_to_shared_folder(path):
         db.session.add(share_file)
         db.session.commit()
     except Exception as e:
+        current_app.logger.error(e)
         return redirect(url_for('share.shared'))
     return redirect(url_for('share.shared'))
 
@@ -128,13 +145,18 @@ def send_to_shared_folder(path):
 @login_required
 def remove(path):
     key_folder = current_user.userkey
-    CURRENT_PATH = os.path.join(functions.GetBasePath(key_folder), path)
+    current_path = os.path.join(functions.GetBasePath(key_folder), path)
     parent_url = functions.getParentUrl(path, key_folder)
     try:
         if functions.IsFile(path, key_folder):
-            os.remove(CURRENT_PATH)
+            file_size = get_file_size(current_path)
+            os.remove(current_path)
+            minus_file_size(current_user, file_size)
         else:
-            shutil.rmtree(CURRENT_PATH)
+            folder_size = get_folder_size(current_path)
+            shutil.rmtree(current_path)
+            minus_file_size(current_user, folder_size)
         return redirect(url_for('main.browse', path=parent_url))
-    except:
-        abort(404)
+    except Exception as e:
+        current_app.logger.error(e)
+        abort(500)

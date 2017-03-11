@@ -2,7 +2,7 @@ from . import share
 from flask import render_template, send_from_directory, send_file, redirect, url_for, current_app, abort
 from flask_login import login_required, current_user
 from app import functions, db
-from app.classmaker import classmaker
+from app.files import classmaker
 import os
 from itsdangerous import URLSafeSerializer
 from app.models import Shared, User
@@ -26,7 +26,8 @@ def token_unload(token):
         file_url = serializer.loads(token)
         file_path = functions.getDownloadPath(file_url)
         return send_file(file_path, as_attachment=True)
-    except:
+    except Exception as e:
+        current_app.logger.warning(e)
         abort(404)
 
 
@@ -37,5 +38,6 @@ def remove_shared_file(file_id):
         db.session.delete(shared_file)
         db.session.commit()
         return redirect(url_for('share.shared'))
-    except:
+    except Exception as e:
+        current_app.logger.error(e)
         return redirect(url_for('share.shared'))

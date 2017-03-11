@@ -30,10 +30,11 @@
                                 {{current_user.username}}
                                 {% endif %}
                                 <span class="caret"></span></button>
-                            <ul class="dropdown-menu">
+                            <ul class="dropdown-menu pull-right">
                                 <li><a href={{url_for('auth.logout')}}>LOGOUT</a></li>
                                 <li><a href="{{url_for('auth.edit_profile')}}">USER DETAILS</a></li>
                                 <li><a href="{{url_for('auth.change_password')}}">CHANGE PASSWORD</a></li>
+                                <li><a href="#">{{ '%.2f' %(current_user.storage_used/ current_user.storage *100) }}%</a></li>
                             </ul>
                         </div>
                     </div>

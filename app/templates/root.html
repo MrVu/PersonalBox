@@ -246,8 +246,11 @@ $(function() {
             processData: false,
             success: function(data){
                 if (data.status == 1){
-                    window.location.href = this.url
-                }
+                    window.location.href = this.url;
+                    }
+                else{
+                    window.location.href = this.url;
+                    }
             }
         });
     });
