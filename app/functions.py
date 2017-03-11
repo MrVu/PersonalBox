@@ -1,5 +1,4 @@
 import os, time, string, random
-from models import User
 from flask_login import current_user
 
 

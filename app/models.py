@@ -3,6 +3,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from flask import current_app
+from functions import GetBasePath
+from files import get_folder_size
 
 
 class Shared(db.Model):
@@ -28,7 +30,7 @@ class User(db.Model, UserMixin):
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
         if self.storage is None:
-            self.storage = 1 * 1024 * 1024 * 1024
+            self.storage = 10 * 1024 * 1024 * 1024
         if self.storage_used is None:
             self.storage_used = 0
         db.session.add(self)
@@ -74,6 +76,16 @@ class User(db.Model, UserMixin):
             db.session.commit()
             return True
         return False
+
+    @classmethod
+    def refix_used_storage(cls):
+        users = User.query.all()
+        for user in users:
+            path = GetBasePath(user.userkey)
+            folder_size = get_folder_size(path)
+            user.storage_used = folder_size
+            db.session.add(user)
+            db.session.commit()
 
 
 @login_manager.user_loader
