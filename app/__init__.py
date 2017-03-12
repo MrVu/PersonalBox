@@ -1,11 +1,13 @@
 from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
-from config import config
+from config import config, Config
 from flask_login import LoginManager
 from flask_mail import Mail
+from celery import Celery
 
 db = SQLAlchemy()
 mail = Mail()
+celery = Celery(__name__, broker=Config.CELERY_BROKER_URL)
 login_manager = LoginManager()
 login_manager.session_protection = 'strong'
 login_manager.login_view = 'auth.login'
@@ -20,6 +22,7 @@ def create_app(config_name):
     db.init_app(app)
     mail.init_app(app)
     login_manager.init_app(app)
+    celery.conf.update(app.config)
 
     # Register Blueprint
     from auth import auth as auth_blueprint

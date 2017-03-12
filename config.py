@@ -13,7 +13,13 @@ class Config:
     FLASKY_MAIL_SUBJECT_PREFIX = '[Ubox]'
     FLASKY_MAIL_SENDER = 'Ubox Admin <admin@ubox.technology>'
     UBOX_ADMIN= os.environ.get('UBOX_ADMIN')
+    SERVER_NAME= os.environ.get('SERVER_NAME') or "127.0.0.1:5000"
     SQLALCHEMY_TRACK_MODIFICATIONS= True
+    CELERY_BROKER_URL = 'redis://localhost:6379/0'
+    CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+    CELERY_ACCEPT_CONTENT = ['json']
+    CELERY_TASK_SERIALIZER = 'json'
+    CELERY_RESULT_SERIALIZER = 'json'
 
     @staticmethod
     def init_app(app):

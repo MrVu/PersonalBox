@@ -42,7 +42,7 @@ def register():
             db.session.add(user)
             db.session.commit()
             token = user.generate_confirm_token()
-            email.send_email(user.email, 'Confirm Your Acccount', 'mails/confirm', user=user, token=token)
+            email.send_email(user.email, 'Confirm Your Acccount', 'mails/confirm', username=user.username, token=token)
             flash("An email is sent to your account, please confirm")
             if not functions.Installed(user.userkey):
                 functions.Install(user.userkey)
@@ -92,7 +92,7 @@ def get_forgot_email():
         user = User.query.filter_by(email=email_form.email.data).first()
         if user is not None:
             token = user.generate_confirm_token()
-            email.send_email(user.email, 'Reset Your Password', 'mails/reset_password', user=user, token=token)
+            email.send_email(user.email, 'Reset Your Password', 'mails/reset_password', username=user.username, token=token)
             flash("An email is sent to your account to reset your password")
             return redirect(url_for('auth.get_forgot_email'))
         else:
@@ -129,7 +129,7 @@ def confirm(token):
 def resend_email():
     user = current_user._get_current_object()
     token = user.generate_confirm_token()
-    email.send_email(user.email, 'Confirm Your Account', 'mails/confirm', user=user, token=token)
+    email.send_email(user.email, 'Confirm Your Account', 'mails/confirm', username=user.username, token=token)
     return redirect(url_for('main.index'))
 
 
