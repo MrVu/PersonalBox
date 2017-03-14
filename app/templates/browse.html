@@ -4,7 +4,7 @@
 
 {% if route %}
 <ul class="breadcrumb">
-    <li><a href="{{ url_for(" main.root")}}">root</a>
+    <li><a href="{{ url_for('main.root')}}">root</a>
         {% for string in route %}
     <li><a>{{string}}</a></li>
     {% endfor %}
@@ -21,6 +21,8 @@
     </div>
 </a>
 {% endif %}
+
+
 <div class="action-panel">
     <button type="button" class="btn btn-info btn-md" data-toggle="modal" data-target="#myModal">NEW
         FOLDER
@@ -42,6 +44,7 @@
 </a>
 {% endif %}
 
+
 {% if Error404 %}
 <a href="javascript:history.back()">
     <div class="panel panel-danger">
@@ -58,6 +61,7 @@
 </a>
 {% endif %}
 
+
 {% if foldersjson|length > 0 %}
 {% for i in foldersjson %}
 <div class="panel panel-primary">
@@ -65,7 +69,9 @@
         <div class="col-md-8">
             <a class="white-link" href={{ url_for("main.browse", path=BASE_PATH + "/"+foldersjson[i])}}>
             <span class="glyphicon glyphicon-folder-open" style="margin-right:10px;"></span>
+            <div class="show-file w-break">
             {{foldersjson[i]}}
+            </div>
             </a>
         </div>
         <div class="col-md-4">
@@ -111,12 +117,14 @@
         <div class="col-md-8">
             <a href={{ url_for("main.browse", path=BASE_PATH+"/"+filesjson[i])}}>
             <span class="{{classmaker(filesjson[i])}}" style="margin-right:10px;"></span>
+            <div class="show-file w-break">
             {{filesjson[i]}}
+            </div>
             </a>
         </div>
 
         <div class="col-md-4">
-            <a href={{ url_for("main.download" , path=BASE_PATH+"/"+filesjson[i])}}>
+            <a href="{{ url_for('main.download' , path=BASE_PATH+"/"+filesjson[i])}}" >
 
             <div class="download">
                 <span class="glyphicon glyphicon-cloud-download" style="margin-right:10px;"></span>
