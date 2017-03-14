@@ -68,9 +68,9 @@
     <div class="panel-heading">
         <div class="col-md-8">
             <a class="white-link" href={{ url_for("main.browse", path=BASE_PATH + "/"+foldersjson[i])}}>
-            <span class="glyphicon glyphicon-folder-open" style="margin-right:10px;"></span>
             <div class="show-file w-break">
-            {{foldersjson[i]}}
+                <span class="glyphicon glyphicon-folder-open" style="margin-right:10px;"></span>
+                {{foldersjson[i]}}
             </div>
             </a>
         </div>
@@ -116,9 +116,9 @@
     <div class="panel-body">
         <div class="col-md-8">
             <a href={{ url_for("main.browse", path=BASE_PATH+"/"+filesjson[i])}}>
-            <span class="{{classmaker(filesjson[i])}}" style="margin-right:10px;"></span>
             <div class="show-file w-break">
-            {{filesjson[i]}}
+                <span class="{{classmaker(filesjson[i])}}" style="margin-right:10px;"></span>
+                {{filesjson[i]}}
             </div>
             </a>
         </div>
