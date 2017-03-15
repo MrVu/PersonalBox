@@ -1,5 +1,6 @@
 import os, time, string, random
 from flask_login import current_user
+from scandir import walk, scandir
 
 
 def Installed(key_folder):
@@ -27,7 +28,7 @@ def ReadPath(path, key_folder):
         return None
 
     try:
-        stuff = next(os.walk(REQUESTED_PATH))
+        stuff = next(walk(REQUESTED_PATH))
         folders = stuff[1]
         files = stuff[2]
         return folders, files
@@ -90,7 +91,7 @@ def geturlpath(path, key_folder):
 
 
 def allowed_file(filename):
-    ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'mp3', 'mp4'])
+    ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'mp3', 'mp4', 'rar'])
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
