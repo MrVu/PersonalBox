@@ -3,10 +3,12 @@ from flask_sqlalchemy import SQLAlchemy
 from config import config, Config
 from flask_login import LoginManager
 from flask_mail import Mail
+from flask_compress import Compress
 from celery import Celery
 
 db = SQLAlchemy()
 mail = Mail()
+compress = Compress()
 celery = Celery(__name__, broker=Config.CELERY_BROKER_URL)
 login_manager = LoginManager()
 login_manager.session_protection = 'strong'
@@ -22,6 +24,7 @@ def create_app(config_name):
     db.init_app(app)
     mail.init_app(app)
     login_manager.init_app(app)
+    compress.init_app(app)
     celery.conf.update(app.config)
 
     # Register Blueprint

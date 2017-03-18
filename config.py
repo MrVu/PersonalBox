@@ -12,9 +12,9 @@ class Config:
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
     FLASKY_MAIL_SUBJECT_PREFIX = '[Ubox]'
     FLASKY_MAIL_SENDER = 'Ubox Admin <admin@ubox.technology>'
-    UBOX_ADMIN= os.environ.get('UBOX_ADMIN')
-    SERVER_NAME= os.environ.get('SERVER_NAME') or "127.0.0.1:5000"
-    SQLALCHEMY_TRACK_MODIFICATIONS= True
+    UBOX_ADMIN = os.environ.get('UBOX_ADMIN')
+    SERVER_NAME = os.environ.get('SERVER_NAME') or "127.0.0.1:5000"
+    SQLALCHEMY_TRACK_MODIFICATIONS = True
     CELERY_BROKER_URL = 'redis://localhost:6379/0'
     CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
     CELERY_ACCEPT_CONTENT = ['json']
@@ -60,6 +60,17 @@ class DevelopmentConfig(Config):
 
 
 class UnixConfig(ProductionConfig):
+    COMPRESS_MIMETYPES = ['text/html',
+                          'text/css',
+                          'text/xml',
+                          'application/json',
+                          'application/javascript'
+                          ]
+
+    COMPRESS_LEVEL = 6
+    COMPRESS_MIN_SIZE = 500
+    COMPRESS_REGISTER = True
+
     @classmethod
     def init_app(cls, app):
         ProductionConfig.init_app(app)
