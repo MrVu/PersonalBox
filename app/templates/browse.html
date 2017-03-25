@@ -222,7 +222,7 @@
             <div class="modal-body">
                 <form id="upload-form" method="POST" enctype="multipart/form-data"
                       action="{{ url_for('main.browse', path= BASE_PATH) }}">
-                    <input id="fileupload" type="file" name="files">
+                    <input id="fileupload" type="file" name="files" multiple>
                     <input id="upload-file-btn" type="submit">
                 </form>
 

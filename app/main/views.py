@@ -28,28 +28,28 @@ def root():
     upload_form = FileUpload()
 
     if request.method == 'POST' and 'files' in request.files:
-        file = request.files['files']
-        file_length = request.content_length
-        if not check_storage_limit(current_user, file_length):
-            flash('Sorry you out of your storage, please upgrade account')
-            response = {'status': 0}
-            return jsonify(response)
-        if file and functions.allowed_file(file.filename):
-            current_path = os.path.join(functions.GetBasePath(key_folder), BASE_PATH)
-            file_name = secure_filename(file.filename)
-            try:
-                file.save(os.path.join(current_path, file_name))
-                update_used_storage(current_user, file_length)
-                response = {'status': 1}
-            except Exception as e:
-                current_app.logger.warning(e)
+        file_list = request.files.getlist('files')
+        for file in file_list:
+            file_length = request.content_length
+            if not check_storage_limit(current_user, file_length):
+                flash('Sorry you out of your storage, please upgrade account')
                 response = {'status': 0}
-            return jsonify(response)
-        else:
-            flash("Sorry, your file extension is not allowed at Ubox")
-            response = {'status': 0}
-            current_app.logger.warning("Some one upload wrong extention: " + current_user.email + ':' + file.filename)
-            return jsonify(response)
+                return jsonify(response)
+            if file and functions.allowed_file(file.filename):
+                current_path = os.path.join(functions.GetBasePath(key_folder), BASE_PATH)
+                file_name = secure_filename(file.filename)
+                try:
+                    file.save(os.path.join(current_path, file_name))
+                    update_used_storage(current_user, file_length)
+                    response = {'status': 1}
+                except Exception as e:
+                    current_app.logger.warning(e)
+                    response = {'status': 0}
+            else:
+                flash("Sorry, your file extension is not allowed at Ubox")
+                response = {'status': 0}
+                current_app.logger.warning("Some one upload wrong extention: " + current_user.email + ':' + file.filename)
+        return jsonify(response)
     elif form.validate_on_submit():
         new_folder = form.folder.data
         functions.MkNewDir(new_folder, BASE_PATH, key_folder)
@@ -74,28 +74,28 @@ def browse(path):
     parent_local_path = functions.parent(current_path, key_folder)
     parent_url = functions.geturlpath(parent_local_path, key_folder)
     if request.method == 'POST' and 'files' in request.files:
-        file = request.files['files']
-        file_length = request.content_length
-        if not check_storage_limit(current_user, file_length):
-            flash('Sorry you out of your storage, please upgrade account')
-            response = {'status': 0}
-            return jsonify(response)
-        if file and functions.allowed_file(file.filename):
-            current_path = os.path.join(functions.GetBasePath(key_folder), BASE_PATH)
-            file_name = secure_filename(file.filename)
-            try:
-                file.save(os.path.join(current_path, file_name))
-                update_used_storage(current_user, file_length)
-                response = {'status': 1}
-            except Exception as e:
-                current_app.logger.warning(e)
+        file_list = request.files.getlist('files')
+        for file in file_list:
+            file_length = request.content_length
+            if not check_storage_limit(current_user, file_length):
+                flash('Sorry you out of your storage, please upgrade account')
                 response = {'status': 0}
-            return jsonify(response)
-        else:
-            flash("Sorry, your file extension is not allowed at Ubox")
-            response = {'status': 0}
-            current_app.logger.warning("Some one upload wrong extention: " + current_user.email + ':' + file.filename)
-            return jsonify(response)
+                return jsonify(response)
+            if file and functions.allowed_file(file.filename):
+                current_path = os.path.join(functions.GetBasePath(key_folder), BASE_PATH)
+                file_name = secure_filename(file.filename)
+                try:
+                    file.save(os.path.join(current_path, file_name))
+                    update_used_storage(current_user, file_length)
+                    response = {'status': 1}
+                except Exception as e:
+                    current_app.logger.warning(e)
+                    response = {'status': 0}
+            else:
+                flash("Sorry, your file extension is not allowed at Ubox")
+                response = {'status': 0}
+                current_app.logger.warning("Some one upload wrong extention: " + current_user.email + ':' + file.filename)
+        return jsonify(response)
 
     elif form.validate_on_submit():
         new_folder = form.folder.data
