@@ -29,6 +29,7 @@ def root():
 
     if request.method == 'POST' and 'files' in request.files:
         file_list = request.files.getlist('files')
+        response = {}
         for file in file_list:
             file_length = request.content_length
             if not check_storage_limit(current_user, file_length):
@@ -48,7 +49,8 @@ def root():
             else:
                 flash("Sorry, your file extension is not allowed at Ubox")
                 response = {'status': 0}
-                current_app.logger.warning("Some one upload wrong extention: " + current_user.email + ':' + file.filename)
+                current_app.logger.warning(
+                    "Some one upload wrong extention: " + current_user.email + ':' + file.filename)
         return jsonify(response)
     elif form.validate_on_submit():
         new_folder = form.folder.data
@@ -75,6 +77,7 @@ def browse(path):
     parent_url = functions.geturlpath(parent_local_path, key_folder)
     if request.method == 'POST' and 'files' in request.files:
         file_list = request.files.getlist('files')
+        response = {}
         for file in file_list:
             file_length = request.content_length
             if not check_storage_limit(current_user, file_length):
@@ -94,7 +97,8 @@ def browse(path):
             else:
                 flash("Sorry, your file extension is not allowed at Ubox")
                 response = {'status': 0}
-                current_app.logger.warning("Some one upload wrong extention: " + current_user.email + ':' + file.filename)
+                current_app.logger.warning(
+                    "Some one upload wrong extention: " + current_user.email + ':' + file.filename)
         return jsonify(response)
 
     elif form.validate_on_submit():
