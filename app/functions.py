@@ -31,6 +31,8 @@ def ReadPath(path, key_folder):
         stuff = next(walk(REQUESTED_PATH))
         folders = stuff[1]
         files = stuff[2]
+        folders.sort()
+        files.sort()
         return folders, files
     except StopIteration:
         return 0
