@@ -58,12 +58,14 @@ def RepoPath(path, key_folder):
 
 
 def GetBasePath(key_folder):
+    """Get users dir"""
     LOCAL_PATH = os.path.dirname(os.path.realpath(__file__))
     REPO = os.path.join(LOCAL_PATH, key_folder)
     return REPO
 
 
 def MkNewDir(name, path, key_folder):
+    """Create a new dir"""
     LOCAL_PATH = os.path.dirname(os.path.realpath(__file__))
     REPO = os.path.join(LOCAL_PATH, key_folder)
     CURRENT_PATH = os.path.join(REPO, path)
@@ -93,12 +95,13 @@ def geturlpath(path, key_folder):
 
 
 def allowed_file(filename):
-    ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'mp3', 'mp4', 'rar'])
+    ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'mp3', 'mp4', 'rar', 'zip', 'iso', 'apk'])
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 def osWalkJson(folders, files):
+    """Return a dictionary of files and folder {1:file_name}"""
     foldersjson = {}
     filesjson = {}
     for i in range(0, len(folders)):
