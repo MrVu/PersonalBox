@@ -13,3 +13,5 @@ Open 3 terminals
 3rd terminal: run ./gunicorn-start.sh to start gunicorn server
 
 Enjoy!! 
+
+Contact: chuvi0902@gmail.com
